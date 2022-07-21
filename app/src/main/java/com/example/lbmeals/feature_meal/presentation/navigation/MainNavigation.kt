@@ -9,7 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.lbmeals.feature_categories.domain.model.Category
 import com.example.lbmeals.feature_categories.presentation.screens.CategoryScreen
+import com.example.lbmeals.feature_meal.domain.model.Meal
 import com.example.lbmeals.feature_meal.presentation.screens.MealDetailsScreen
 import com.example.lbmeals.feature_meal.presentation.screens.MealsScreen
 
@@ -35,7 +37,7 @@ fun MainNavigation() {
                 }
             )
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("category")?.let {
+            backStackEntry.arguments?.getParcelable<Category>("category")?.let {
                 MealsScreen(
                     navController = navController,
                     it
@@ -50,7 +52,7 @@ fun MainNavigation() {
                 }
             )
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("meal")?.let {
+            backStackEntry.arguments?.getParcelable<Meal>("meal")?.let {
                 MealDetailsScreen(
                     navController = navController,
                     it
