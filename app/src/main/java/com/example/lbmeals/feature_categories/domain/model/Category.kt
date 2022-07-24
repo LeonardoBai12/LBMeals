@@ -9,7 +9,7 @@ data class Category(
     @SerializedName("idMeal")
     val id: String,
     @SerializedName("strCategory")
-    val category: String,
+    val name: String,
     @SerializedName("strCategoryThumb")
     val thumbnail: String,
     @SerializedName("strCategoryDescription")
