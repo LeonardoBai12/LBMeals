@@ -15,7 +15,7 @@ import com.example.lbmeals.feature_categories.domain.model.Category
 
 @ExperimentalMaterial3Api
 @Composable
-fun CategoryCard(category: Category, onClick: (String) -> Unit) {
+fun CategoryCard(category: Category, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -24,7 +24,9 @@ fun CategoryCard(category: Category, onClick: (String) -> Unit) {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(0.5f)
         ),
-        onClick = { },
+        onClick = {
+            onClick.invoke()
+        },
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
