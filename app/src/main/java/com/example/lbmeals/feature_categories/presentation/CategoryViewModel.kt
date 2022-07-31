@@ -23,9 +23,7 @@ class CategoryViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     sealed class UiEvent {
-        data class OnCategoryClicked(val category: Category): UiEvent()
         data class ShowToast(val message: String): UiEvent()
-        object Finish: UiEvent()
     }
 
     init {
@@ -37,9 +35,6 @@ class CategoryViewModel @Inject constructor(
     fun onEvent(event: CategoryEvent) {
         viewModelScope.launch {
             when (event) {
-                is CategoryEvent.OnClickCategory -> {
-                    _eventFlow.emit(UiEvent.OnCategoryClicked(event.category))
-                }
                 is CategoryEvent.SearchedForCategory -> {
 
                 }
@@ -48,7 +43,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     private suspend fun getCategories() {
-        useCases.getCategoryUseCase().takeIf {
+        useCases.getCategoriesUseCase().takeIf {
             it.isNotEmpty()
         }?.let {
             _state.value = state.value.copy(

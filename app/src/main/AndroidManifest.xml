@@ -17,7 +17,7 @@
         android:theme="@style/Theme.LBMeals"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".core.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LBMeals">
             <intent-filter>

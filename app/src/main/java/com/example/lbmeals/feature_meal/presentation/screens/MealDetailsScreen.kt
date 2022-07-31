@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import com.example.lbmeals.feature_meal.domain.model.Meal
 
 @Composable
-fun MealDetailsScreen(navController: NavHostController, meal: Meal) {
+fun MealDetailsScreen(
+    navController: NavHostController,
+) {
 
 }
