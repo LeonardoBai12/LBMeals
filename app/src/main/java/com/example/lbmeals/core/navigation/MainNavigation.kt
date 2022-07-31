@@ -10,8 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.lbmeals.feature_categories.presentation.CategoryScreen
-import com.example.lbmeals.feature_meal.presentation.screens.MealDetailsScreen
-import com.example.lbmeals.feature_meal.presentation.screens.MealsScreen
+import com.example.lbmeals.feature_meal_details.presentation.MealDetailsScreen
+import com.example.lbmeals.feature_meals.presentation.MealsScreen
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
@@ -45,9 +45,7 @@ fun MainNavigation() {
                 }
             )
         ){
-            MealDetailsScreen(
-                navController = navController,
-            )
+            MealDetailsScreen(navController = navController)
         }
     }
 }

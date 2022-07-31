@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class CategoryModule {
+object CategoryModule {
     @Provides
     fun providesCategoryService(retrofit: Retrofit): CategoryService {
         return retrofit.create(CategoryService::class.java)
