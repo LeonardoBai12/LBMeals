@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.lbmeals.core.navigation.MainScreens
 import com.example.lbmeals.feature_categories.presentation.components.CategoryCard
+import com.example.lbmeals.feature_categories.presentation.components.CategoryShimmerCard
 
 @ExperimentalMaterial3Api
 @Composable
@@ -33,23 +34,52 @@ fun CategoryScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxSize()
-                    .padding(24.dp),
-                columns = GridCells.Fixed(2),
-            ) {
-                items(state.categories) { category ->
-                    CategoryCard(
-                        category = category,
-                        onClick = {
-                            navController.navigate(
-                                MainScreens.MealsScreen.route + "/${category.name}"
-                            )
-                        },
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+            if (state.loading) {
+                CategoryShimmerColumn()
+            } else {
+                CategoriesColumn(state, navController)
             }
+        }
+    }
+}
+
+@Composable
+private fun CategoryShimmerColumn() {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        columns = GridCells.Fixed(2),
+    ) {
+        items(5) {
+            CategoryShimmerCard()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun CategoriesColumn(
+    state: CategoryState,
+    navController: NavHostController
+) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        columns = GridCells.Fixed(2),
+    ) {
+        items(state.categories) { category ->
+            CategoryCard(
+                category = category,
+                onClick = {
+                    navController.navigate(
+                        MainScreens.MealsScreen.route + "/${category.name}"
+                    )
+                },
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

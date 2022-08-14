@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.lbmeals.core.navigation.MainScreens
 import com.example.lbmeals.feature_meals.presentation.components.MealCard
+import com.example.lbmeals.feature_meals.presentation.components.MealShimmerCard
 
 @ExperimentalMaterial3Api
 @Composable
@@ -32,19 +33,43 @@ fun MealsScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.meals) { meal ->
-                    MealCard(
-                        meal = meal,
-                        onClick = {
-                            navController.navigate(
-                                MainScreens.MealDetailsScreen.route + "/${meal.id}"
-                            )
-                        },
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+            if (state.loading) {
+                MealsShimmerColumn()
+            } else {
+                MealsColumn(state, navController)
             }
+
+        }
+    }
+}
+
+@Composable
+private fun MealsShimmerColumn() {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(3) {
+            MealShimmerCard()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun MealsColumn(
+    state: MealState,
+    navController: NavHostController
+) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(state.meals) { meal ->
+            MealCard(
+                meal = meal,
+                onClick = {
+                    navController.navigate(
+                        MainScreens.MealDetailsScreen.route + "/${meal.id}"
+                    )
+                },
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

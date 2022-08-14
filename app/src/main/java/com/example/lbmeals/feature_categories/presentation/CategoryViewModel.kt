@@ -43,13 +43,31 @@ class CategoryViewModel @Inject constructor(
     }
 
     private suspend fun getCategories() {
+        loadingState()
+
         useCases.getCategoriesUseCase().takeIf {
             it.isNotEmpty()
         }?.let {
             _state.value = state.value.copy(
                 categories = it,
+                loading = false,
             )
-        } ?: _eventFlow.emit(
+        } ?: errorState()
+    }
+
+    private fun loadingState() {
+        _state.value = state.value.copy(
+            categories = emptyList(),
+            loading = true,
+        )
+    }
+
+    private suspend fun errorState() {
+        _state.value = state.value.copy(
+            categories = emptyList(),
+            loading = false,
+        )
+        _eventFlow.emit(
             UiEvent.ShowToast("Something went wrong!")
         )
     }

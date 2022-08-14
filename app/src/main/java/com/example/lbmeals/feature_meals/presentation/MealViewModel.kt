@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lbmeals.feature_categories.presentation.CategoryViewModel
 import com.example.lbmeals.feature_meals.domain.use_case.MealUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,7 +31,9 @@ class MealViewModel @Inject constructor(
 
     init {
         category = savedStateHandle["category"] ?: ""
-        getMealsByCategory()
+        viewModelScope.launch {
+            getMealsByCategory()
+        }
     }
 
     fun onEvent(event: MealEvent) {
@@ -41,17 +44,33 @@ class MealViewModel @Inject constructor(
         }
     }
 
-    private fun getMealsByCategory() {
-        viewModelScope.launch {
-            useCases.getMealsUseCase(category).takeIf {
-                it.isNotEmpty()
-            }?.let {
-                _state.value = state.value.copy(
-                    meals = it,
-                )
-            } ?: _eventFlow.emit(
-                UiEvent.ShowToast("Something went wrong!")
+    private suspend fun getMealsByCategory() {
+        loadingState()
+
+        useCases.getMealsUseCase(category).takeIf {
+            it.isNotEmpty()
+        }?.let {
+            _state.value = state.value.copy(
+                meals = it,
+                loading = false
             )
-        }
+        } ?: errorState()
+    }
+
+    private fun loadingState() {
+        _state.value = state.value.copy(
+            meals = emptyList(),
+            loading = true,
+        )
+    }
+
+    private suspend fun errorState() {
+        _state.value = state.value.copy(
+            meals = emptyList(),
+            loading = false,
+        )
+        _eventFlow.emit(
+            UiEvent.ShowToast("Something went wrong!")
+        )
     }
 }
