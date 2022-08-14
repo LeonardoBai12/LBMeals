@@ -1,12 +1,12 @@
 package com.example.lbmeals.feature_meals.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,44 +16,36 @@ import com.example.lbmeals.feature_meals.domain.model.Meal
 @ExperimentalMaterial3Api
 @Composable
 fun MealCard(meal: Meal, onClick: () -> Unit) {
-    Card(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(0.5f)
-        ),
-        onClick = {
-            onClick.invoke()
-        },
+            .padding(horizontal = 12.dp)
+            .clickable {
+                onClick()
+            },
+        shadowElevation = 3.dp
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+        Column(
+            modifier = Modifier.fillMaxSize(),
         ) {
             Image(
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.height(200.dp)
+                    .fillMaxWidth(),
                 painter = rememberAsyncImagePainter(meal.thumbnail),
+                contentScale = ContentScale.Crop,
                 contentDescription = "mealThumb",
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column {
-                Text(
-                    text = meal.name,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
-                )
-
-                Text(
-                    text = meal.area ?: "",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
-                )
-            }
+            Text(
+                modifier = Modifier.padding(
+                    horizontal = 16.dp,
+                    vertical = 12.dp,
+                ),
+                text = meal.name,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
+            )
         }
+
     }
 }
