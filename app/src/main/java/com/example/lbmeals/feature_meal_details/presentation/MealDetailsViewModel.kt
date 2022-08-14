@@ -6,7 +6,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lbmeals.feature_meal_details.domain.use_case.MealDetailsUseCases
-import com.example.lbmeals.feature_meals.presentation.MealViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -22,7 +21,7 @@ class MealDetailsViewModel @Inject constructor(
     private val _state = mutableStateOf(MealDetailsState())
     val state: State<MealDetailsState> = _state
 
-    private val _eventFlow = MutableSharedFlow<MealViewModel.UiEvent>()
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     sealed class UiEvent {
@@ -31,18 +30,35 @@ class MealDetailsViewModel @Inject constructor(
 
     init {
         mealId = savedStateHandle["meal"] ?: ""
-        getMealDetailsById()
+        viewModelScope.launch {
+            getMealDetailsById()
+        }
     }
 
-    private fun getMealDetailsById() {
-        viewModelScope.launch {
-            useCases.getMealDetailsByIdUseCase(mealId)?.let {
-                _state.value = state.value.copy(
-                    meal = it,
-                )
-            } ?: _eventFlow.emit(
-                MealViewModel.UiEvent.ShowToast("Something went wrong!")
+    private suspend fun getMealDetailsById() {
+        loadingState()
+        useCases.getMealDetailsByIdUseCase(mealId)?.let {
+            _state.value = state.value.copy(
+                meal = it,
+                loading = false
             )
-        }
+        } ?: errorState()
+    }
+
+    private fun loadingState() {
+        _state.value = state.value.copy(
+            meal = null,
+            loading = true,
+        )
+    }
+
+    private suspend fun errorState() {
+        _state.value = state.value.copy(
+            meal = null,
+            loading = false,
+        )
+        _eventFlow.emit(
+            UiEvent.ShowToast("Something went wrong!")
+        )
     }
 }

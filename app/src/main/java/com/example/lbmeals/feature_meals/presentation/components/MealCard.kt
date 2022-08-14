@@ -90,7 +90,7 @@ fun MealShimmerCard() {
             )
 
             Spacer(
-                modifier = Modifier.height(18.dp)
+                modifier = Modifier.height(24.dp)
                     .fillMaxWidth(0.7F)
                     .padding(
                         horizontal = 16.dp,

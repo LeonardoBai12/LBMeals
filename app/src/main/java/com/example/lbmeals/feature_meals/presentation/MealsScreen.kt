@@ -38,7 +38,6 @@ fun MealsScreen(
             } else {
                 MealsColumn(state, navController)
             }
-
         }
     }
 }

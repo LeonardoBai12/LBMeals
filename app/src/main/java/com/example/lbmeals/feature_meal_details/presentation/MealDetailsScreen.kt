@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.lbmeals.feature_meals.domain.model.Meal
+import com.example.lbmeals.util.components.shimmerAnimation
 import com.example.lbmeals.util.listOfMeasuredIngredients
 
 @ExperimentalMaterial3Api
@@ -35,32 +36,126 @@ fun MealDetailsScreen(
     viewModel: MealDetailsViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
-    val scrollState = rememberScrollState()
 
     Scaffold(modifier = Modifier.fillMaxSize()) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState),
+        if (state.loading) {
+            MealDetailsShimmerColumn(it)
+        } else {
+            MealDetailsColumn(state, it)
+        }
+    }
+}
+
+@Composable
+fun MealDetailsShimmerColumn(it: PaddingValues) {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        Spacer(
+            modifier = Modifier.fillMaxWidth()
+                .height(400.dp)
+                .shimmerAnimation(),
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth()
+                .padding(it)
+                .padding(top = 350.dp),
+            shape = RoundedCornerShape(32.dp),
         ) {
-            Image(
+            MealDetailsShimmer()
+        }
+    }
+}
+
+@Composable
+private fun MealDetailsColumn(
+    state: MealDetailsState,
+    it: PaddingValues
+) {
+    val scrollState = rememberScrollState()
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState),
+    ) {
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            painter = rememberAsyncImagePainter(state.meal?.thumbnail),
+            contentScale = ContentScale.Crop,
+            contentDescription = "mealThumb",
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth()
+                .padding(it)
+                .padding(top = 350.dp),
+            shape = RoundedCornerShape(32.dp),
+        ) {
+            MealDetails(state.meal)
+        }
+    }
+}
+
+@Composable
+fun MealDetailsShimmer() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(
+            modifier = Modifier.fillMaxWidth(0.5F)
+                .height(32.dp)
+                .padding(top = 18.dp, bottom = 4.dp)
+                .shimmerAnimation(),
+        )
+
+        Spacer(
+            modifier = Modifier.fillMaxWidth(0.3F)
+                .height(24.dp)
+                .padding(bottom = 18.dp)
+                .shimmerAnimation(),
+        )
+
+        Text(
+            modifier = Modifier.padding(bottom = 18.dp),
+            text = "Ingredients",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        repeat(3) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp),
-                painter = rememberAsyncImagePainter(state.meal?.thumbnail),
-                contentScale = ContentScale.Crop,
-                contentDescription = "mealThumb",
-            )
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(it)
-                    .padding(top = 350.dp),
-                shape = RoundedCornerShape(32.dp),
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Start,
             ) {
-                MealDetails(meal = state.meal)
+                Icon(
+                    Icons.Default.PlayArrow,
+                    contentDescription = "ingredient"
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(
+                    modifier = Modifier.fillMaxWidth(0.5F)
+                        .height(24.dp)
+                        .padding(bottom = 8.dp)
+                        .shimmerAnimation(),
+                )
             }
         }
+
+        Text(
+            modifier = Modifier.padding(top = 18.dp),
+            text = "Instructions",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }
 
@@ -72,14 +167,13 @@ private fun MealDetails(meal: Meal?) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            modifier = Modifier.padding(top = 18.dp),
+            modifier = Modifier.padding(18.dp),
             text = meal?.name ?: "",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            modifier = Modifier.padding(bottom = 18.dp),
             text = meal?.area ?: "",
             fontSize = 18.sp,
         )
