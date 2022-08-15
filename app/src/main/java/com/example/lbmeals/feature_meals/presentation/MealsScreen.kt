@@ -3,8 +3,10 @@ package com.example.lbmeals.feature_meals.presentation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +16,7 @@ import androidx.navigation.NavHostController
 import com.example.lbmeals.core.navigation.MainScreens
 import com.example.lbmeals.feature_meals.presentation.components.MealCard
 import com.example.lbmeals.feature_meals.presentation.components.MealShimmerCard
+import com.example.lbmeals.util.components.DefaultAppBar
 
 @ExperimentalMaterial3Api
 @Composable
@@ -25,6 +28,20 @@ fun MealsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        topBar = {
+            DefaultAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription ="Arrow Back",
+                        )
+                    }
+                },
+            )
+        },
     ) {
         Column(
             modifier = Modifier

@@ -1,16 +1,12 @@
 package com.example.lbmeals.feature_meal_details.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.lbmeals.feature_meals.domain.model.Meal
+import com.example.lbmeals.util.components.DefaultAppBar
 import com.example.lbmeals.util.components.shimmerAnimation
 import com.example.lbmeals.util.listOfMeasuredIngredients
 
@@ -37,7 +34,24 @@ fun MealDetailsScreen(
 ) {
     val state = viewModel.state.value
 
-    Scaffold(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        topBar = {
+            DefaultAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Arrow Back",
+                            tint = Color.White
+                        )
+                    }
+                },
+            )
+        },
+    ) {
         if (state.loading) {
             MealDetailsShimmerColumn(it)
         } else {
@@ -60,7 +74,7 @@ fun MealDetailsShimmerColumn(it: PaddingValues) {
         Surface(
             modifier = Modifier.fillMaxWidth()
                 .padding(it)
-                .padding(top = 350.dp),
+                .padding(top = 300.dp),
             shape = RoundedCornerShape(32.dp),
         ) {
             MealDetailsShimmer()
@@ -91,7 +105,7 @@ private fun MealDetailsColumn(
         Surface(
             modifier = Modifier.fillMaxWidth()
                 .padding(it)
-                .padding(top = 350.dp),
+                .padding(top = 300.dp),
             shape = RoundedCornerShape(32.dp),
         ) {
             MealDetails(state.meal)
