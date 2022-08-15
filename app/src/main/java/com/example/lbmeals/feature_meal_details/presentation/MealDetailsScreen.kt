@@ -1,10 +1,8 @@
 package com.example.lbmeals.feature_meal_details.presentation
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
@@ -12,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.lbmeals.R
 import com.example.lbmeals.feature_meals.domain.model.Meal
-import com.example.lbmeals.util.components.DefaultAppBar
 import com.example.lbmeals.util.components.shimmerAnimation
 import com.example.lbmeals.util.listOfMeasuredIngredients
 
@@ -38,24 +38,15 @@ fun MealDetailsScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
-        topBar = {
-            DefaultAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Arrow Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-            )
-        },
     ) {
         if (state.loading) {
             MealDetailsShimmerColumn(it)
         } else {
-            MealDetailsColumn(state, it)
+            MealDetailsColumn(
+                state = state,
+                padding = it,
+                navController = navController
+            )
         }
     }
 }
@@ -67,12 +58,14 @@ fun MealDetailsShimmerColumn(it: PaddingValues) {
             .fillMaxSize(),
     ) {
         Spacer(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(400.dp)
                 .shimmerAnimation(),
         )
         Surface(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(it)
                 .padding(top = 300.dp),
             shape = RoundedCornerShape(32.dp),
@@ -85,7 +78,8 @@ fun MealDetailsShimmerColumn(it: PaddingValues) {
 @Composable
 private fun MealDetailsColumn(
     state: MealDetailsState,
-    it: PaddingValues
+    padding: PaddingValues,
+    navController: NavHostController,
 ) {
     val scrollState = rememberScrollState()
 
@@ -94,17 +88,29 @@ private fun MealDetailsColumn(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Image(
+        Surface {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
+                painter = rememberAsyncImagePainter(state.meal?.thumbnail),
+                contentScale = ContentScale.Crop,
+                contentDescription = "mealThumb",
+            )
+
+            IconButton(onClick = { navController.popBackStack() }) {
+                Image(
+                    modifier = Modifier.fillMaxSize(0.6F),
+                    painter = painterResource(id = R.drawable.ic_back_arrow),
+                    contentDescription = "Arrow Back",
+                )
+            }
+        }
+
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp),
-            painter = rememberAsyncImagePainter(state.meal?.thumbnail),
-            contentScale = ContentScale.Crop,
-            contentDescription = "mealThumb",
-        )
-        Surface(
-            modifier = Modifier.fillMaxWidth()
-                .padding(it)
+                .padding(padding)
                 .padding(top = 300.dp),
             shape = RoundedCornerShape(32.dp),
         ) {
@@ -121,14 +127,16 @@ fun MealDetailsShimmer() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(
-            modifier = Modifier.fillMaxWidth(0.5F)
+            modifier = Modifier
+                .fillMaxWidth(0.5F)
                 .height(32.dp)
                 .padding(top = 18.dp, bottom = 4.dp)
                 .shimmerAnimation(),
         )
 
         Spacer(
-            modifier = Modifier.fillMaxWidth(0.3F)
+            modifier = Modifier
+                .fillMaxWidth(0.3F)
                 .height(24.dp)
                 .padding(bottom = 18.dp)
                 .shimmerAnimation(),
@@ -155,7 +163,8 @@ fun MealDetailsShimmer() {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Spacer(
-                    modifier = Modifier.fillMaxWidth(0.5F)
+                    modifier = Modifier
+                        .fillMaxWidth(0.5F)
                         .height(24.dp)
                         .padding(bottom = 8.dp)
                         .shimmerAnimation(),
