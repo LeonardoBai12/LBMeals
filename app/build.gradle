@@ -10,7 +10,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.lbmeals"
+        applicationId "io.lb.lbmeals"
         minSdk 21
         targetSdk 33
         versionCode 1
