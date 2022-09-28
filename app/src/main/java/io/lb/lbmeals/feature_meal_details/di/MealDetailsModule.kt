@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class MealDetailsModule {
+object MealDetailsModule {
     @Provides
     fun providesMealDetailsService(retrofit: Retrofit): MealDetailsService {
         return retrofit.create(MealDetailsService::class.java)
