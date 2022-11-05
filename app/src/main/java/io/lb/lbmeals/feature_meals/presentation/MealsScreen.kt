@@ -81,7 +81,8 @@ fun MealsScreen(
                 ),
                 onSearch = { meal ->
                     viewModel.onEvent(MealEvent.SearchedForMeal(meal))
-                }
+                },
+                isEnabled = !state.loading
             )
 
             if (state.loading) {

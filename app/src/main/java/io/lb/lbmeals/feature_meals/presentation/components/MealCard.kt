@@ -74,9 +74,7 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
 @Composable
 fun MealShimmerCard() {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp),
+        modifier = Modifier.fillMaxWidth(),
         shadowElevation = 3.dp
     ) {
         Column(

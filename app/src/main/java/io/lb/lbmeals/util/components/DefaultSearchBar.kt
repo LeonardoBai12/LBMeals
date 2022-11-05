@@ -23,7 +23,8 @@ import androidx.compose.ui.unit.dp
 fun DefaultSearchBAr(
     modifier: Modifier = Modifier,
     hint: String = "",
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    isEnabled: Boolean = true,
 ) {
     var text by remember {
         mutableStateOf("")
@@ -38,6 +39,7 @@ fun DefaultSearchBAr(
             },
             maxLines = 1,
             singleLine = true,
+            enabled = isEnabled,
             placeholder = {
                 Text(
                     modifier = Modifier.alpha(ContentAlpha.medium),

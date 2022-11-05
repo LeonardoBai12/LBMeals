@@ -48,9 +48,9 @@ fun MealDetailsScreen(
                 },
                 title = {
                     Text(
-                        text = state.meal?.name ?: "",
+                        text = state.meal?.category ?: "",
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             )
@@ -203,13 +203,24 @@ private fun MealDetails(meal: Meal?) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            modifier = Modifier.padding(18.dp),
+            modifier = Modifier.padding(
+                top = 18.dp,
+                start = 18.dp,
+                end = 18.dp,
+            ),
+            text = meal?.name ?: "",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        )
+
+        Text(
             text = meal?.area ?: "",
             fontSize = 18.sp,
         )
 
         Text(
-            modifier = Modifier.padding(bottom = 18.dp),
+            modifier = Modifier.padding(vertical = 18.dp),
             text = "Ingredients",
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
