@@ -42,6 +42,7 @@ fun MealDetailsScreen(
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription ="Arrow Back",
+                            tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
                 },
@@ -76,14 +77,25 @@ fun MealDetailsScreen(
 
 @Composable
 fun MealDetailsShimmerColumn(it: PaddingValues) {
-    Surface(
+    BoxWithConstraints(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(it)
-            .padding(top = 300.dp),
-        shape = RoundedCornerShape(32.dp),
+            .fillMaxSize(),
     ) {
-        MealDetailsShimmer()
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp)
+                .shimmerAnimation(),
+        )
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(it)
+                .padding(top = 300.dp),
+            shape = RoundedCornerShape(32.dp),
+        ) {
+            MealDetailsShimmer()
+        }
     }
 }
 

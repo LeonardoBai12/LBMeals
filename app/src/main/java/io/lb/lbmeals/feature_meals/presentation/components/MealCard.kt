@@ -23,7 +23,6 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
             .clickable {
                 onClick()
             },

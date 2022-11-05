@@ -39,6 +39,7 @@ fun MealsScreen(
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription ="Arrow Back",
+                            tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
                 },
@@ -94,7 +95,7 @@ private fun MealsColumn(
                     )
                 },
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
