@@ -7,7 +7,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +19,9 @@ import io.lb.lbmeals.core.navigation.MainScreens
 import io.lb.lbmeals.feature_meals.presentation.components.MealCard
 import io.lb.lbmeals.feature_meals.presentation.components.MealShimmerCard
 import io.lb.lbmeals.util.components.DefaultAppBar
+import io.lb.lbmeals.util.components.DefaultSearchBAr
+import io.lb.lbmeals.util.filterByName
+import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterial3Api
 @Composable
@@ -27,6 +30,16 @@ fun MealsScreen(
     viewModel: MealViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is MealViewModel.UiEvent.ShowToast -> {
+
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -60,6 +73,17 @@ fun MealsScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            DefaultSearchBAr(
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                ),
+                onSearch = { meal ->
+                    viewModel.onEvent(MealEvent.SearchedForMeal(meal))
+                }
+            )
+
             if (state.loading) {
                 MealsShimmerColumn()
             } else {

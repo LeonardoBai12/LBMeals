@@ -2,6 +2,13 @@ package io.lb.lbmeals.util
 
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 
+fun List<Meal>.filterByName(name: String) =
+    filter {
+        it.name.lowercase().contains(
+            name.lowercase()
+        )
+    }
+
 fun Meal.listOfMeasuredIngredients(): List<String> {
     val ingredients = mutableListOf<String>()
 

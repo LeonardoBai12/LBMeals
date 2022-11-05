@@ -2,11 +2,15 @@ package io.lb.lbmeals.feature_meals.presentation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.lb.lbmeals.feature_meals.domain.use_case.MealUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.lb.lbmeals.feature_meals.domain.model.Meal
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -16,7 +20,7 @@ import javax.inject.Inject
 class MealViewModel @Inject constructor(
     private val useCases: MealUseCases,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
     private val _state = mutableStateOf(MealState())
     val category: String
     val state: State<MealState> = _state
@@ -24,8 +28,11 @@ class MealViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    private val meals = mutableListOf<Meal>()
+    private var searchJob: Job? = null
+
     sealed class UiEvent {
-        data class ShowToast(val message: String): UiEvent()
+        data class ShowToast(val message: String) : UiEvent()
     }
 
     init {
@@ -36,9 +43,20 @@ class MealViewModel @Inject constructor(
     }
 
     fun onEvent(event: MealEvent) {
-        when(event) {
+        when (event) {
             is MealEvent.SearchedForMeal -> {
-
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    delay(300L)
+                    _state.value = state.value.copy(
+                        meals = meals.filter {
+                            it.name.lowercase().contains(
+                                event.filter.lowercase()
+                            )
+                        },
+                        loading = false,
+                    )
+                }
             }
         }
     }
@@ -49,6 +67,8 @@ class MealViewModel @Inject constructor(
         useCases.getMealsUseCase(category).takeIf {
             it.isNotEmpty()
         }?.let {
+            meals.addAll(it)
+
             _state.value = state.value.copy(
                 meals = it,
                 loading = false
@@ -57,6 +77,8 @@ class MealViewModel @Inject constructor(
     }
 
     private fun loadingState() {
+        meals.clear()
+
         _state.value = state.value.copy(
             meals = emptyList(),
             loading = true,
@@ -64,6 +86,8 @@ class MealViewModel @Inject constructor(
     }
 
     private suspend fun errorState() {
+        meals.clear()
+
         _state.value = state.value.copy(
             meals = emptyList(),
             loading = false,
