@@ -4,13 +4,13 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import io.lb.lbmeals.R
 import io.lb.lbmeals.feature_meals.domain.model.Meal
+import io.lb.lbmeals.util.components.DefaultAppBar
 import io.lb.lbmeals.util.components.shimmerAnimation
 import io.lb.lbmeals.util.listOfMeasuredIngredients
 
@@ -35,40 +35,55 @@ fun MealDetailsScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
-    ) {
-        if (state.loading) {
-            MealDetailsShimmerColumn(it)
-        } else {
-            MealDetailsColumn(
-                state = state,
-                padding = it,
-                navController = navController
+        topBar = {
+            DefaultAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription ="Arrow Back",
+                        )
+                    }
+                },
+                title = {
+                    Text(
+                        text = state.meal?.name ?: "",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             )
+        },
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (state.loading) {
+                MealDetailsShimmerColumn(it)
+            } else {
+                MealDetailsColumn(
+                    state = state,
+                    padding = it,
+                )
+            }
         }
     }
 }
 
 @Composable
 fun MealDetailsShimmerColumn(it: PaddingValues) {
-    BoxWithConstraints(
+    Surface(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth()
+            .padding(it)
+            .padding(top = 300.dp),
+        shape = RoundedCornerShape(32.dp),
     ) {
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp)
-                .shimmerAnimation(),
-        )
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(it)
-                .padding(top = 300.dp),
-            shape = RoundedCornerShape(32.dp),
-        ) {
-            MealDetailsShimmer()
-        }
+        MealDetailsShimmer()
     }
 }
 
@@ -76,7 +91,6 @@ fun MealDetailsShimmerColumn(it: PaddingValues) {
 private fun MealDetailsColumn(
     state: MealDetailsState,
     padding: PaddingValues,
-    navController: NavHostController,
 ) {
     val scrollState = rememberScrollState()
 
@@ -85,24 +99,14 @@ private fun MealDetailsColumn(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Surface {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp),
-                painter = rememberAsyncImagePainter(state.meal?.thumbnail),
-                contentScale = ContentScale.Crop,
-                contentDescription = "mealThumb",
-            )
-
-            IconButton(onClick = { navController.popBackStack() }) {
-                Image(
-                    modifier = Modifier.fillMaxSize(0.6F),
-                    painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = "Arrow Back",
-                )
-            }
-        }
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            painter = rememberAsyncImagePainter(state.meal?.thumbnail),
+            contentScale = ContentScale.Crop,
+            contentDescription = "mealThumb",
+        )
 
         Surface(
             modifier = Modifier
@@ -188,12 +192,6 @@ private fun MealDetails(meal: Meal?) {
     ) {
         Text(
             modifier = Modifier.padding(18.dp),
-            text = meal?.name ?: "",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        Text(
             text = meal?.area ?: "",
             fontSize = 18.sp,
         )

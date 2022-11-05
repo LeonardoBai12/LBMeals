@@ -17,8 +17,8 @@ class MealViewModel @Inject constructor(
     private val useCases: MealUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val category: String
     private val _state = mutableStateOf(MealState())
+    val category: String
     val state: State<MealState> = _state
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()

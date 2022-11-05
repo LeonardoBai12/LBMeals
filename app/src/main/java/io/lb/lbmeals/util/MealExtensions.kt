@@ -5,10 +5,12 @@ import io.lb.lbmeals.feature_meals.domain.model.Meal
 fun Meal.listOfMeasuredIngredients(): List<String> {
     val ingredients = mutableListOf<String>()
 
+    val meal = this
+
     ingredient1?.takeIf {
         it.isNotEmpty()
     }?.let {
-        ingredients.add("$measure1 $it")
+        ingredients.add("${meal.measure1} $it")
     }
 
     ingredient2?.takeIf {
