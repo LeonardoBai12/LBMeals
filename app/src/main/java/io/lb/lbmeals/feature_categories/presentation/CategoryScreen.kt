@@ -3,10 +3,7 @@ package io.lb.lbmeals.feature_categories.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,26 +35,21 @@ fun CategoryScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
+        LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .padding(it)
+                .padding(horizontal = 24.dp),
+            columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CategoryHeader()
-
-            LazyVerticalGrid(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                columns = GridCells.Fixed(2),
-            ) {
-                if (state.loading) {
-                    categoryShimmerColumn()
-                } else {
-                    categoriesColumn(state, navController)
-                }
+            item(span = { GridItemSpan(2) }) {
+                CategoryHeader()
+            }
+            if (state.loading) {
+                categoryShimmerColumn()
+            } else {
+                categoriesColumn(state, navController)
             }
         }
     }
@@ -65,28 +57,32 @@ fun CategoryScreen(
 
 @Composable
 private fun CategoryHeader() {
-    Image(
-        modifier = Modifier.padding(16.dp),
-        painter = painterResource(
-            id = if (isSystemInDarkTheme()) {
-                R.drawable.ic_lbio_meals_dark_theme
-            } else {
-                R.drawable.ic_lbio_meals_light_theme
-            }
-        ),
-        contentDescription = "lightThemeAppIntro"
-    )
-
-    Text(
-        modifier = Modifier.padding(horizontal = 12.dp),
-        text = "Choose your favorite kind of food =)",
-        style = TextStyle(
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            textAlign = TextAlign.Center
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = Modifier.padding(top = 24.dp),
+            painter = painterResource(
+                id = if (isSystemInDarkTheme()) {
+                    R.drawable.ic_lbio_meals_dark_theme
+                } else {
+                    R.drawable.ic_lbio_meals_light_theme
+                }
+            ),
+            contentDescription = "lightThemeAppIntro"
         )
-    )
+
+        Text(
+            text = "Choose your favorite kind of food =)",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                textAlign = TextAlign.Center
+            )
+        )
+    }
 }
 
 private fun LazyGridScope.categoryShimmerColumn() {

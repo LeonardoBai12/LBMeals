@@ -2,6 +2,7 @@ package io.lb.lbmeals.feature_meals.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
@@ -20,7 +21,6 @@ import io.lb.lbmeals.feature_meals.presentation.components.MealCard
 import io.lb.lbmeals.feature_meals.presentation.components.MealShimmerCard
 import io.lb.lbmeals.util.components.DefaultAppBar
 import io.lb.lbmeals.util.components.DefaultSearchBAr
-import io.lb.lbmeals.util.filterByName
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterial3Api
@@ -51,7 +51,7 @@ fun MealsScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription ="Arrow Back",
+                            contentDescription = "Arrow Back",
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -73,54 +73,52 @@ fun MealsScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            DefaultSearchBAr(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                ),
-                onSearch = { meal ->
-                    viewModel.onEvent(MealEvent.SearchedForMeal(meal))
-                },
-                isEnabled = !state.loading
-            )
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                item {
+                    DefaultSearchBAr(
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp
+                        ),
+                        onSearch = { meal ->
+                            viewModel.onEvent(MealEvent.SearchedForMeal(meal))
+                        },
+                        isEnabled = !state.loading
+                    )
+                }
 
-            if (state.loading) {
-                MealsShimmerColumn()
-            } else {
-                MealsColumn(state, navController)
+                if (state.loading) {
+                    mealsShimmerColumn()
+                } else {
+                    mealsColumn(state, navController)
+                }
             }
         }
     }
 }
 
-@Composable
-private fun MealsShimmerColumn() {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(3) {
-            MealShimmerCard()
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+private fun LazyListScope.mealsShimmerColumn() {
+    items(3) {
+        MealShimmerCard()
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @ExperimentalMaterial3Api
-@Composable
-private fun MealsColumn(
+private fun LazyListScope.mealsColumn(
     state: MealState,
     navController: NavHostController
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(state.meals) { meal ->
-            MealCard(
-                meal = meal,
-                onClick = {
-                    navController.navigate(
-                        MainScreens.MealDetailsScreen.route + "/${meal.id}"
-                    )
-                },
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+    items(state.meals) { meal ->
+        MealCard(
+            meal = meal,
+            onClick = {
+                navController.navigate(
+                    MainScreens.MealDetailsScreen.route + "/${meal.id}"
+                )
+            },
+        )
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
