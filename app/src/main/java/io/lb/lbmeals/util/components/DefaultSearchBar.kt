@@ -73,6 +73,7 @@ fun DefaultSearchBAr(
                 if (text.isNotEmpty()) {
                     IconButton(onClick = {
                         text = ""
+                        onSearch(text)
                     }) {
                         Icon(
                             modifier = Modifier.padding(end = 16.dp),
