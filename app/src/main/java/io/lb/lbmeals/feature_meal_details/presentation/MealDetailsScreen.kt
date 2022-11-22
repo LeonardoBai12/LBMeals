@@ -21,7 +21,7 @@ import coil.compose.rememberAsyncImagePainter
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 import io.lb.lbmeals.util.components.DefaultAppBar
 import io.lb.lbmeals.util.components.shimmerAnimation
-import io.lb.lbmeals.util.listOfMeasuredIngredients
+import io.lb.lbmeals.util.measuredIngredients
 
 @ExperimentalMaterial3Api
 @Composable
@@ -227,7 +227,7 @@ private fun MealDetails(meal: Meal?) {
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        meal?.listOfMeasuredIngredients()?.forEach {
+        meal?.measuredIngredients()?.forEach {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

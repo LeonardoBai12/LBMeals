@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import io.lb.lbmeals.feature_meals.domain.use_case.MealUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.lbmeals.feature_meals.domain.model.Meal
+import io.lb.lbmeals.util.filterByName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -49,11 +50,7 @@ class MealViewModel @Inject constructor(
                 searchJob = viewModelScope.launch {
                     delay(300L)
                     _state.value = state.value.copy(
-                        meals = meals.filter {
-                            it.name.lowercase().contains(
-                                event.filter.lowercase()
-                            )
-                        },
+                        meals = meals.filterByName(event.filter),
                         loading = false,
                     )
                 }
