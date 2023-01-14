@@ -38,9 +38,7 @@ class MealViewModel @Inject constructor(
 
     init {
         category = savedStateHandle["category"] ?: ""
-        viewModelScope.launch {
-            getMealsByCategory()
-        }
+        getMealsByCategory()
     }
 
     fun onEvent(event: MealEvent) {
@@ -48,43 +46,48 @@ class MealViewModel @Inject constructor(
             is MealEvent.SearchedForMeal -> {
                 searchJob?.cancel()
                 searchJob = viewModelScope.launch {
-                    delay(300L)
+                    event.filter.takeIf {
+                        it.isNotEmpty()
+                    }?.let {
+                        delay(300L)
+                    }
                     _state.value = state.value.copy(
                         meals = meals.filterByName(event.filter),
-                        loading = false,
                     )
                 }
             }
         }
     }
 
-    private suspend fun getMealsByCategory() {
-        useCases.getMealsUseCase(category).collect { result ->
-            when (result) {
-                is Resource.Success -> {
-                    result.data?.let {
-                        meals.addAll(it)
+    fun getMealsByCategory() {
+        viewModelScope.launch {
+            useCases.getMealsUseCase(category).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            meals.addAll(it)
 
+                            _state.value = state.value.copy(
+                                meals = it,
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
                         _state.value = state.value.copy(
-                            meals = it,
+                            meals = emptyList(),
+                        )
+
+                        _eventFlow.emit(
+                            UiEvent.ShowToast(
+                                result.message ?: "Something went wrong!"
+                            )
                         )
                     }
-                }
-                is Resource.Error -> {
-                    _state.value = state.value.copy(
-                        meals = emptyList(),
-                    )
-
-                    _eventFlow.emit(
-                        UiEvent.ShowToast(
-                            result.message ?: "Something went wrong!"
+                    is Resource.Loading -> {
+                        _state.value = state.value.copy(
+                            loading = result.isLoading,
                         )
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = state.value.copy(
-                        loading = result.isLoading,
-                    )
+                    }
                 }
             }
         }

@@ -25,6 +25,7 @@ import io.lb.lbmeals.R
 import io.lb.lbmeals.core.navigation.MainScreens
 import io.lb.lbmeals.feature_categories.presentation.components.CategoryCard
 import io.lb.lbmeals.feature_categories.presentation.components.CategoryShimmerCard
+import io.lb.lbmeals.util.components.DefaultErrorScreen
 import io.lb.lbmeals.util.showToast
 import kotlinx.coroutines.flow.collectLatest
 
@@ -49,29 +50,50 @@ fun CategoryScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
+    ) { padding ->
+            CategoriesColumn(
+                padding = padding,
+                state = state,
+                navController = navController,
+                viewModel = viewModel,
+            )
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun CategoriesColumn(
+    padding: PaddingValues,
+    state: CategoryState,
+    navController: NavHostController,
+    viewModel: CategoryViewModel
+) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(horizontal = 24.dp),
+        columns = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.Top,
     ) {
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(horizontal = 24.dp),
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.Top,
-        ) {
-            item(span = { GridItemSpan(2) }) {
-                CategoryHeader()
-            }
-            if (!state.loading) {
-                state.categories.takeIf { categories ->
-                    categories.isNotEmpty()
-                }?.let {
-                    categoriesColumn(state, navController)
-                } ?: run {
-                    // TODO fazer tela genérica de erro
+        item(span = { GridItemSpan(2) }) {
+            CategoryHeader()
+        }
+
+        if (!state.loading) {
+            state.categories.takeIf { categories ->
+                categories.isNotEmpty()
+            }?.let {
+                categoriesColumn(state, navController)
+            } ?: run {
+                item(span = { GridItemSpan(2) }) {
+                    DefaultErrorScreen {
+                        viewModel.getCategories()
+                    }
                 }
-            } else {
-                categoryShimmerColumn()
             }
+        } else {
+            categoryShimmerColumn()
         }
     }
 }

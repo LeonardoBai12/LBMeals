@@ -24,21 +24,19 @@ import androidx.compose.ui.unit.dp
 @ExperimentalComposeUiApi
 @Composable
 fun DefaultSearchBar(
+    search: MutableState<String>,
     modifier: Modifier = Modifier,
     hint: String = "",
     onSearch: (String) -> Unit = {},
     isEnabled: Boolean = true,
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(modifier = modifier) {
         TextField(
-            value = text,
+            value = search.value,
             onValueChange = {
-                text = it
+                search.value = it
                 onSearch(it)
             },
             maxLines = 1,
@@ -77,10 +75,10 @@ fun DefaultSearchBar(
                 )
             },
             trailingIcon = {
-                if (text.isNotEmpty()) {
+                if (search.value.isNotEmpty()) {
                     IconButton(onClick = {
-                        text = ""
-                        onSearch(text)
+                        search.value = ""
+                        onSearch(search.value)
                     }) {
                         Icon(
                             modifier = Modifier.padding(end = 16.dp),

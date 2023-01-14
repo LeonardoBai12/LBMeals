@@ -14,6 +14,8 @@ class MealDetailsRepositoryImpl(
 ): MealDetailsRepository {
     override suspend fun getMealDetailsById(id: String): Flow<Resource<Meal?>> {
         return flow {
+            emit(Resource.Loading(true))
+
             val response = try {
                 service.getMealDetailsById(id)
             } catch (e: IOException) {

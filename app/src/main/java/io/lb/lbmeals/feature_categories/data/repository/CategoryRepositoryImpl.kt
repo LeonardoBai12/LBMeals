@@ -14,6 +14,8 @@ class CategoryRepositoryImpl(
 ) : CategoryRepository {
     override suspend fun getCategories(): Flow<Resource<List<Category>>> {
         return flow {
+            emit(Resource.Loading(true))
+
             val response = try {
                 service.getCategories()
             } catch (e: IOException) {

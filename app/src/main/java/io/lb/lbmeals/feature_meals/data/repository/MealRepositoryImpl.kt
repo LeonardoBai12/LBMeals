@@ -14,6 +14,8 @@ class MealRepositoryImpl(
 ): MealRepository {
     override suspend fun getMealsByCategory(category: String): Flow<Resource<List<Meal>>> {
         return flow {
+            emit(Resource.Loading(true))
+
             val response = try {
                 service.getMealByCategory(category)
             } catch (e: IOException) {

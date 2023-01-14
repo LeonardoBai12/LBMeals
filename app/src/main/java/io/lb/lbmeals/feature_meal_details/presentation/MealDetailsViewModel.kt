@@ -31,36 +31,36 @@ class MealDetailsViewModel @Inject constructor(
 
     init {
         mealId = savedStateHandle["meal"] ?: ""
-        viewModelScope.launch {
-            getMealDetailsById()
-        }
+        getMealDetailsById()
     }
 
-    private suspend fun getMealDetailsById() {
-        useCases.getMealDetailsByIdUseCase(mealId).collect { result ->
-            when (result) {
-                is Resource.Success -> {
-                    result.data?.let {
+    fun getMealDetailsById() {
+        viewModelScope.launch {
+            useCases.getMealDetailsByIdUseCase(mealId).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            _state.value = state.value.copy(
+                                meal = it,
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
                         _state.value = state.value.copy(
-                            meal = it,
+                            meal = null
+                        )
+
+                        _eventFlow.emit(
+                            UiEvent.ShowToast(
+                                result.message ?: "Something went wrong!"
+                            )
                         )
                     }
-                }
-                is Resource.Error -> {
-                    _state.value = state.value.copy(
-                        meal = null
-                    )
-
-                    _eventFlow.emit(
-                        UiEvent.ShowToast(
-                            result.message ?: "Something went wrong!"
+                    is Resource.Loading -> {
+                        _state.value = state.value.copy(
+                            loading = result.isLoading,
                         )
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = state.value.copy(
-                        loading = result.isLoading,
-                    )
+                    }
                 }
             }
         }

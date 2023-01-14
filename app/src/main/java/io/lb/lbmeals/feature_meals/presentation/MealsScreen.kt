@@ -23,6 +23,7 @@ import io.lb.lbmeals.core.navigation.MainScreens
 import io.lb.lbmeals.feature_meals.presentation.components.MealCard
 import io.lb.lbmeals.feature_meals.presentation.components.MealShimmerCard
 import io.lb.lbmeals.util.components.DefaultAppBar
+import io.lb.lbmeals.util.components.DefaultErrorScreen
 import io.lb.lbmeals.util.components.DefaultSearchBar
 import io.lb.lbmeals.util.showToast
 import kotlinx.coroutines.flow.collectLatest
@@ -36,6 +37,9 @@ fun MealsScreen(
 ) {
     val state = viewModel.state.value
     val context = LocalContext.current
+    val search = remember {
+        mutableStateOf("")
+    }
 
     LaunchedEffect(key1 = "MealsScreen") {
         viewModel.eventFlow.collectLatest { event ->
@@ -82,6 +86,7 @@ fun MealsScreen(
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 item {
                     DefaultSearchBar(
+                        search = search,
                         modifier = Modifier.padding(
                             start = 16.dp,
                             end = 16.dp,
@@ -99,8 +104,14 @@ fun MealsScreen(
                         meals.isNotEmpty()
                     }?.let {
                         mealsColumn(state, navController)
-                    } ?: run {
-                        // TODO fazer tela genérica de erro
+                    } ?: takeIf {
+                        search.value.isEmpty()
+                    }?.let {
+                        item {
+                            DefaultErrorScreen {
+                                viewModel.getMealsByCategory()
+                            }
+                        }
                     }
                 } else {
                     mealsShimmerColumn()

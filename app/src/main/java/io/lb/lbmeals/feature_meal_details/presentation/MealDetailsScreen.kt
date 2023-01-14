@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 import io.lb.lbmeals.util.components.DefaultAppBar
+import io.lb.lbmeals.util.components.DefaultErrorScreen
 import io.lb.lbmeals.util.components.shimmerAnimation
 import io.lb.lbmeals.util.measuredIngredients
 import io.lb.lbmeals.util.showToast
@@ -84,6 +85,7 @@ fun MealDetailsScreen(
                 MealDetailsColumn(
                     state = state,
                     padding = it,
+                    viewModel = viewModel,
                 )
             }
         }
@@ -118,6 +120,7 @@ fun MealDetailsShimmerColumn(it: PaddingValues) {
 private fun MealDetailsColumn(
     state: MealDetailsState,
     padding: PaddingValues,
+    viewModel: MealDetailsViewModel,
 ) {
     val scrollState = rememberScrollState()
 
@@ -147,7 +150,9 @@ private fun MealDetailsColumn(
             }
         }
     } ?: run {
-        // TODO fazer tela genérica de erro
+        DefaultErrorScreen {
+            viewModel.getMealDetailsById()
+        }
     }
 }
 

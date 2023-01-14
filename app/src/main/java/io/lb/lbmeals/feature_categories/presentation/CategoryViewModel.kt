@@ -27,36 +27,36 @@ class CategoryViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
-            getCategories()
-        }
+        getCategories()
     }
 
-    private suspend fun getCategories() {
-        useCases.getCategoriesUseCase().collect { result ->
-            when (result) {
-                is Resource.Success -> {
-                    result.data?.let {
+    fun getCategories() {
+        viewModelScope.launch {
+            useCases.getCategoriesUseCase().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            _state.value = state.value.copy(
+                                categories = it,
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
                         _state.value = state.value.copy(
-                            categories = it,
+                            categories = emptyList(),
+                        )
+
+                        _eventFlow.emit(
+                            UiEvent.ShowToast(
+                                result.message ?: "Something went wrong!"
+                            )
                         )
                     }
-                }
-                is Resource.Error -> {
-                    _state.value = state.value.copy(
-                        categories = emptyList(),
-                    )
-
-                    _eventFlow.emit(
-                        UiEvent.ShowToast(
-                            result.message ?: "Something went wrong!"
+                    is Resource.Loading -> {
+                        _state.value = state.value.copy(
+                            loading = result.isLoading,
                         )
-                    )
-                }
-                is Resource.Loading -> {
-                    _state.value = state.value.copy(
-                        loading = result.isLoading,
-                    )
+                    }
                 }
             }
         }
