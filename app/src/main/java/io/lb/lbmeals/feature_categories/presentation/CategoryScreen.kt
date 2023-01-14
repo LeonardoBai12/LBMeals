@@ -9,8 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +25,8 @@ import io.lb.lbmeals.R
 import io.lb.lbmeals.core.navigation.MainScreens
 import io.lb.lbmeals.feature_categories.presentation.components.CategoryCard
 import io.lb.lbmeals.feature_categories.presentation.components.CategoryShimmerCard
+import io.lb.lbmeals.util.showToast
+import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterial3Api
 @Composable
@@ -31,6 +35,17 @@ fun CategoryScreen(
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = "CategoryScreen") {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is CategoryViewModel.UiEvent.ShowToast -> {
+                    context.showToast(event.message)
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -46,10 +61,16 @@ fun CategoryScreen(
             item(span = { GridItemSpan(2) }) {
                 CategoryHeader()
             }
-            if (state.loading) {
-                categoryShimmerColumn()
+            if (!state.loading) {
+                state.categories.takeIf { categories ->
+                    categories.isNotEmpty()
+                }?.let {
+                    categoriesColumn(state, navController)
+                } ?: run {
+                    // TODO fazer tela genérica de erro
+                }
             } else {
-                categoriesColumn(state, navController)
+                categoryShimmerColumn()
             }
         }
     }

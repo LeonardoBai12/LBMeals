@@ -23,14 +23,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
-            Toast.makeText(
-                this,
-                throwable.message,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
         setContent {
             LBMealsTheme {
                 Surface(

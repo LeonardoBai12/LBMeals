@@ -36,8 +36,9 @@ class MealRepositoryImpl(
                         } ?: emptyList()
                     )
                 )
-                emit(Resource.Loading(false))
             }
+
+            emit(Resource.Loading(false))
         }
     }
 }

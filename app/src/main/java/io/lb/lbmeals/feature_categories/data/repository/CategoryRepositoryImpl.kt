@@ -36,8 +36,9 @@ class CategoryRepositoryImpl(
                         } ?: emptyList()
                     )
                 )
-                emit(Resource.Loading(false))
             }
+
+            emit(Resource.Loading(false))
         }
     }
 }

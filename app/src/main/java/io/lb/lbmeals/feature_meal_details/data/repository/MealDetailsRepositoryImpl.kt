@@ -36,8 +36,9 @@ class MealDetailsRepositoryImpl(
                         }
                     )
                 )
-                emit(Resource.Loading(false))
             }
+
+            emit(Resource.Loading(false))
         }
     }
 }

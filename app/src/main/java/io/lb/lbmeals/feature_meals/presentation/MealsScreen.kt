@@ -1,5 +1,6 @@
 package io.lb.lbmeals.feature_meals.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -10,7 +11,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,9 +23,11 @@ import io.lb.lbmeals.core.navigation.MainScreens
 import io.lb.lbmeals.feature_meals.presentation.components.MealCard
 import io.lb.lbmeals.feature_meals.presentation.components.MealShimmerCard
 import io.lb.lbmeals.util.components.DefaultAppBar
-import io.lb.lbmeals.util.components.DefaultSearchBAr
+import io.lb.lbmeals.util.components.DefaultSearchBar
+import io.lb.lbmeals.util.showToast
 import kotlinx.coroutines.flow.collectLatest
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
 @Composable
 fun MealsScreen(
@@ -30,12 +35,13 @@ fun MealsScreen(
     viewModel: MealViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
+    val context = LocalContext.current
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = "MealsScreen") {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is MealViewModel.UiEvent.ShowToast -> {
-
+                    context.showToast(event.message)
                 }
             }
         }
@@ -75,7 +81,7 @@ fun MealsScreen(
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 item {
-                    DefaultSearchBAr(
+                    DefaultSearchBar(
                         modifier = Modifier.padding(
                             start = 16.dp,
                             end = 16.dp,
@@ -88,10 +94,16 @@ fun MealsScreen(
                     )
                 }
 
-                if (state.loading) {
-                    mealsShimmerColumn()
+                if (!state.loading) {
+                    state.meals.takeIf { meals ->
+                        meals.isNotEmpty()
+                    }?.let {
+                        mealsColumn(state, navController)
+                    } ?: run {
+                        // TODO fazer tela genérica de erro
+                    }
                 } else {
-                    mealsColumn(state, navController)
+                    mealsShimmerColumn()
                 }
             }
         }
