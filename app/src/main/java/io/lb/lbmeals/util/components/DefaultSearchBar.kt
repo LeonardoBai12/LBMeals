@@ -2,6 +2,7 @@ package io.lb.lbmeals.util.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,31 +11,32 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
+@ExperimentalComposeUiApi
 @Composable
-fun DefaultSearchBAr(
+fun DefaultSearchBar(
+    search: MutableState<String>,
     modifier: Modifier = Modifier,
     hint: String = "",
     onSearch: (String) -> Unit = {},
     isEnabled: Boolean = true,
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(modifier = modifier) {
         TextField(
-            value = text,
+            value = search.value,
             onValueChange = {
-                text = it
+                search.value = it
                 onSearch(it)
             },
             maxLines = 1,
@@ -59,8 +61,11 @@ fun DefaultSearchBAr(
                 .fillMaxWidth()
                 .shadow(5.dp, CircleShape),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
+                imeAction = ImeAction.Default,
             ),
+            keyboardActions = KeyboardActions {
+                keyboardController?.hide()
+            },
             leadingIcon = {
                 Icon(
                     modifier = Modifier.padding(start = 16.dp),
@@ -70,9 +75,10 @@ fun DefaultSearchBAr(
                 )
             },
             trailingIcon = {
-                if (text.isNotEmpty()) {
+                if (search.value.isNotEmpty()) {
                     IconButton(onClick = {
-                        text = ""
+                        search.value = ""
+                        onSearch(search.value)
                     }) {
                         Icon(
                             modifier = Modifier.padding(end = 16.dp),

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.lb.lbmeals.feature_meal_details.domain.use_case.MealDetailsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.lb.lbmeals.util.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class MealDetailsViewModel @Inject constructor(
     private val useCases: MealDetailsUseCases,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
     private val mealId: String
     private val _state = mutableStateOf(MealDetailsState())
     val state: State<MealDetailsState> = _state
@@ -25,40 +26,43 @@ class MealDetailsViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     sealed class UiEvent {
-        data class ShowToast(val message: String): UiEvent()
+        data class ShowToast(val message: String) : UiEvent()
     }
 
     init {
         mealId = savedStateHandle["meal"] ?: ""
+        getMealDetailsById()
+    }
+
+    fun getMealDetailsById() {
         viewModelScope.launch {
-            getMealDetailsById()
+            useCases.getMealDetailsByIdUseCase(mealId).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            _state.value = state.value.copy(
+                                meal = it,
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        _state.value = state.value.copy(
+                            meal = null
+                        )
+
+                        _eventFlow.emit(
+                            UiEvent.ShowToast(
+                                result.message ?: "Something went wrong!"
+                            )
+                        )
+                    }
+                    is Resource.Loading -> {
+                        _state.value = state.value.copy(
+                            loading = result.isLoading,
+                        )
+                    }
+                }
+            }
         }
-    }
-
-    private suspend fun getMealDetailsById() {
-        loadingState()
-        useCases.getMealDetailsByIdUseCase(mealId)?.let {
-            _state.value = state.value.copy(
-                meal = it,
-                loading = false
-            )
-        } ?: errorState()
-    }
-
-    private fun loadingState() {
-        _state.value = state.value.copy(
-            meal = null,
-            loading = true,
-        )
-    }
-
-    private suspend fun errorState() {
-        _state.value = state.value.copy(
-            meal = null,
-            loading = false,
-        )
-        _eventFlow.emit(
-            UiEvent.ShowToast("Something went wrong!")
-        )
     }
 }

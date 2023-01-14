@@ -9,130 +9,41 @@ fun List<Meal>.filterByName(name: String) =
         )
     }
 
-fun Meal.listOfMeasuredIngredients(): List<String> {
+fun Meal.measuredIngredients(): List<String> {
     val ingredients = mutableListOf<String>()
 
-    val meal = this
-
-    ingredient1?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("${meal.measure1} $it")
-    }
-
-    ingredient2?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure2 $it")
-    }
-
-    ingredient3?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure3 $it")
-    }
-
-    ingredient4?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure4 $it")
-    }
-
-    ingredient5?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure5 $it")
-    }
-
-    ingredient6?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure6 $it")
-    }
-
-    ingredient7?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure7 $it")
-    }
-
-    ingredient8?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure8 $it")
-    }
-
-    ingredient9?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure9 $it")
-    }
-
-    ingredient10?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure10 $it")
-    }
-
-    ingredient11?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure11 $it")
-    }
-
-    ingredient12?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure12 $it")
-    }
-
-    ingredient13?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure13 $it")
-    }
-
-    ingredient14?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure14 $it")
-    }
-
-    ingredient15?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure15 $it")
-    }
-
-    ingredient16?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure16 $it")
-    }
-
-    ingredient17?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure17 $it")
-    }
-
-    ingredient18?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure18 $it")
-    }
-
-    ingredient19?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure19 $it")
-    }
-
-    ingredient20?.takeIf {
-        it.isNotEmpty()
-    }?.let {
-        ingredients.add("$measure20 $it")
-    }
+    ingredients.addMealMeasuredIngredient(ingredient1, measure1)
+    ingredients.addMealMeasuredIngredient(ingredient2, measure2)
+    ingredients.addMealMeasuredIngredient(ingredient3, measure3)
+    ingredients.addMealMeasuredIngredient(ingredient4, measure4)
+    ingredients.addMealMeasuredIngredient(ingredient5, measure5)
+    ingredients.addMealMeasuredIngredient(ingredient6, measure6)
+    ingredients.addMealMeasuredIngredient(ingredient7, measure7)
+    ingredients.addMealMeasuredIngredient(ingredient8, measure8)
+    ingredients.addMealMeasuredIngredient(ingredient9, measure9)
+    ingredients.addMealMeasuredIngredient(ingredient10, measure10)
+    ingredients.addMealMeasuredIngredient(ingredient11, measure11)
+    ingredients.addMealMeasuredIngredient(ingredient12, measure12)
+    ingredients.addMealMeasuredIngredient(ingredient13, measure13)
+    ingredients.addMealMeasuredIngredient(ingredient14, measure14)
+    ingredients.addMealMeasuredIngredient(ingredient15, measure15)
+    ingredients.addMealMeasuredIngredient(ingredient16, measure16)
+    ingredients.addMealMeasuredIngredient(ingredient17, measure17)
+    ingredients.addMealMeasuredIngredient(ingredient18, measure18)
+    ingredients.addMealMeasuredIngredient(ingredient19, measure19)
+    ingredients.addMealMeasuredIngredient(ingredient20, measure20)
 
     return ingredients
+}
+
+fun MutableList<String>.addMealMeasuredIngredient(ingredient: String?, measure: String?) {
+    ingredient?.takeIf {
+        it.isNotBlank()
+    }?.let {
+        measure?.takeIf { measure ->
+            measure.isNotBlank()
+        }?.let { measure ->
+            add("$measure $it")
+        } ?: add(it)
+    }
 }

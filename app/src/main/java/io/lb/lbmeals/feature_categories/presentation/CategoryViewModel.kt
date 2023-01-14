@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.lb.lbmeals.feature_categories.domain.use_case.CategoryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.lb.lbmeals.util.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val useCases: CategoryUseCases
-): ViewModel() {
+) : ViewModel() {
     private val _state = mutableStateOf(CategoryState())
     val state: State<CategoryState> = _state
 
@@ -26,48 +27,38 @@ class CategoryViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
-            getCategories()
-        }
+        getCategories()
     }
 
-    fun onEvent(event: CategoryEvent) {
+    fun getCategories() {
         viewModelScope.launch {
-            when (event) {
-                is CategoryEvent.SearchedForCategory -> {
+            useCases.getCategoriesUseCase().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            _state.value = state.value.copy(
+                                categories = it,
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        _state.value = state.value.copy(
+                            categories = emptyList(),
+                        )
 
+                        _eventFlow.emit(
+                            UiEvent.ShowToast(
+                                result.message ?: "Something went wrong!"
+                            )
+                        )
+                    }
+                    is Resource.Loading -> {
+                        _state.value = state.value.copy(
+                            loading = result.isLoading,
+                        )
+                    }
                 }
             }
         }
-    }
-
-    private suspend fun getCategories() {
-        loadingState()
-
-        useCases.getCategoriesUseCase().takeIf {
-            it.isNotEmpty()
-        }?.let {
-            _state.value = state.value.copy(
-                categories = it,
-                loading = false,
-            )
-        } ?: errorState()
-    }
-
-    private fun loadingState() {
-        _state.value = state.value.copy(
-            categories = emptyList(),
-            loading = true,
-        )
-    }
-
-    private suspend fun errorState() {
-        _state.value = state.value.copy(
-            categories = emptyList(),
-            loading = false,
-        )
-        _eventFlow.emit(
-            UiEvent.ShowToast("Something went wrong!")
-        )
     }
 }

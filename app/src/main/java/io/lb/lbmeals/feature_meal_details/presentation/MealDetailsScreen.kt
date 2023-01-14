@@ -8,9 +8,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,8 +22,11 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 import io.lb.lbmeals.util.components.DefaultAppBar
+import io.lb.lbmeals.util.components.DefaultErrorScreen
 import io.lb.lbmeals.util.components.shimmerAnimation
-import io.lb.lbmeals.util.listOfMeasuredIngredients
+import io.lb.lbmeals.util.measuredIngredients
+import io.lb.lbmeals.util.showToast
+import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterial3Api
 @Composable
@@ -30,6 +35,17 @@ fun MealDetailsScreen(
     viewModel: MealDetailsViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = "MealDetailsScreen") {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is MealDetailsViewModel.UiEvent.ShowToast -> {
+                    context.showToast(event.message)
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -69,6 +85,7 @@ fun MealDetailsScreen(
                 MealDetailsColumn(
                     state = state,
                     padding = it,
+                    viewModel = viewModel,
                 )
             }
         }
@@ -103,31 +120,38 @@ fun MealDetailsShimmerColumn(it: PaddingValues) {
 private fun MealDetailsColumn(
     state: MealDetailsState,
     padding: PaddingValues,
+    viewModel: MealDetailsViewModel,
 ) {
     val scrollState = rememberScrollState()
 
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-    ) {
-        Image(
+    state.meal?.let {
+        BoxWithConstraints(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp),
-            painter = rememberAsyncImagePainter(state.meal?.thumbnail),
-            contentScale = ContentScale.Crop,
-            contentDescription = "mealThumb",
-        )
-
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(padding)
-                .padding(top = 300.dp),
-            shape = RoundedCornerShape(32.dp),
+                .fillMaxSize()
+                .verticalScroll(scrollState),
         ) {
-            MealDetails(state.meal)
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
+                painter = rememberAsyncImagePainter(state.meal?.thumbnail),
+                contentScale = ContentScale.Crop,
+                contentDescription = "mealThumb",
+            )
+
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding)
+                    .padding(top = 300.dp),
+                shape = RoundedCornerShape(32.dp),
+            ) {
+                MealDetails(state.meal)
+            }
+        }
+    } ?: run {
+        DefaultErrorScreen {
+            viewModel.getMealDetailsById()
         }
     }
 }
@@ -227,7 +251,7 @@ private fun MealDetails(meal: Meal?) {
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        meal?.listOfMeasuredIngredients()?.forEach {
+        meal?.measuredIngredients()?.forEach {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
