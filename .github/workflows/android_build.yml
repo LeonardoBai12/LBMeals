@@ -1,4 +1,4 @@
-name: Android Build
+name: Run Unit Tests
 
 on: pull_request
 
@@ -16,8 +16,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Run Tests
-        run: ./gradlew test
-
       - name: Build Project
         run: ./gradlew assemble
+
+      - name: Run Tests
+        run: ./gradlew test
