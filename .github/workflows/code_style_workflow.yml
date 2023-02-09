@@ -19,4 +19,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Validate Code Style
-        run: ./gradlew clean ktlintCheck
+        run: ./gradlew clean ktlintCheck --no-daemon
+
+      - name: Upload KtLint Reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: "ktlint-reports"
+          path: "app/build/reports/ktlint/"

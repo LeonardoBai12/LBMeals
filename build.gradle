@@ -33,7 +33,6 @@ subprojects {
     ktlint {
         verbose = true
         ignoreFailures = false
-        enableExperimentalRules = false
 
         reporters {
             reporter "plain"
