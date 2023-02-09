@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.lb.lbmeals.feature_meal_details.domain.use_case.MealDetailsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.lb.lbmeals.feature_meal_details.domain.use_case.MealDetailsUseCases
 import io.lb.lbmeals.util.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -1,14 +1,14 @@
 package io.lb.lbmeals.feature_meals.di
 
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import io.lb.lbmeals.feature_meals.data.data_source.MealService
 import io.lb.lbmeals.feature_meals.data.repository.MealRepositoryImpl
 import io.lb.lbmeals.feature_meals.domain.repository.MealRepository
 import io.lb.lbmeals.feature_meals.domain.use_case.GetMealsUseCase
 import io.lb.lbmeals.feature_meals.domain.use_case.MealUseCases
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import retrofit2.Retrofit
 
 @Module

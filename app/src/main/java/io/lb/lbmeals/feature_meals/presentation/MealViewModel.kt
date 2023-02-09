@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.lb.lbmeals.feature_meals.domain.use_case.MealUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.lbmeals.feature_meals.domain.model.Meal
+import io.lb.lbmeals.feature_meals.domain.use_case.MealUseCases
 import io.lb.lbmeals.util.Resource
 import io.lb.lbmeals.util.filterByName
 import kotlinx.coroutines.Job

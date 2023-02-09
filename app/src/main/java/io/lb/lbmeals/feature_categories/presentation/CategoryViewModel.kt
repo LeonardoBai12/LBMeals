@@ -4,8 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.lb.lbmeals.feature_categories.domain.use_case.CategoryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.lb.lbmeals.feature_categories.domain.use_case.CategoryUseCases
 import io.lb.lbmeals.util.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,7 +23,7 @@ class CategoryViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     sealed class UiEvent {
-        data class ShowToast(val message: String): UiEvent()
+        data class ShowToast(val message: String) : UiEvent()
     }
 
     init {

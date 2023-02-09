@@ -11,7 +11,7 @@ import java.io.IOException
 
 class MealRepositoryImpl(
     private val service: MealService
-): MealRepository {
+) : MealRepository {
     override suspend fun getMealsByCategory(category: String): Flow<Resource<List<Meal>>> {
         return flow {
             emit(Resource.Loading(true))
@@ -30,12 +30,12 @@ class MealRepositoryImpl(
 
             response?.let { meals ->
                 emit(
-                     Resource.Success(
-                         data = meals.takeIf {
-                              it.isSuccessful
+                    Resource.Success(
+                        data = meals.takeIf {
+                            it.isSuccessful
                         }?.let {
-                                               it.body()?.meals
-                                    } ?: emptyList()
+                            it.body()?.meals
+                        } ?: emptyList()
                     )
                 )
             }
