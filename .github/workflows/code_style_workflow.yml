@@ -3,7 +3,7 @@ name: Code Style Validation
 on: pull_request
 
 jobs:
-  build:
+  code_style:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,4 +19,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Validate Code Style
-        run: ./gradlew clean ktlintCheck --no-daemon
+        run: ./gradlew clean ktlintCheck
