@@ -11,7 +11,7 @@ import java.io.IOException
 
 class MealRepositoryImpl(
     private val service: MealService
-): MealRepository {
+) : MealRepository {
     override suspend fun getMealsByCategory(category: String): Flow<Resource<List<Meal>>> {
         return flow {
             emit(Resource.Loading(true))

@@ -2,8 +2,18 @@ package io.lb.lbmeals.feature_categories.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -51,12 +61,12 @@ fun CategoryScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { padding ->
-            CategoriesColumn(
-                padding = padding,
-                state = state,
-                navController = navController,
-                viewModel = viewModel,
-            )
+        CategoriesColumn(
+            padding = padding,
+            state = state,
+            navController = navController,
+            viewModel = viewModel,
+        )
     }
 }
 

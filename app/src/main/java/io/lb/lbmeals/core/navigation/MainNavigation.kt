@@ -23,7 +23,7 @@ fun MainNavigation() {
         navController = navController,
         startDestination = MainScreens.CategoryScreen.route
     ) {
-        composable(MainScreens.CategoryScreen.route){
+        composable(MainScreens.CategoryScreen.route) {
             CategoryScreen(navController = navController)
         }
 
@@ -34,7 +34,7 @@ fun MainNavigation() {
                     type = NavType.StringType
                 }
             )
-        ){
+        ) {
             MealsScreen(navController = navController)
         }
         composable(
@@ -44,7 +44,7 @@ fun MainNavigation() {
                     type = NavType.StringType
                 }
             )
-        ){
+        ) {
             MealDetailsScreen(navController = navController)
         }
     }
