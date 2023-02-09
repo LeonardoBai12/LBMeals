@@ -30,12 +30,12 @@ class MealRepositoryImpl(
 
             response?.let { meals ->
                 emit(
-                    Resource.Success(
-                        data = meals.takeIf {
-                            it.isSuccessful
+                     Resource.Success(
+                         data = meals.takeIf {
+                              it.isSuccessful
                         }?.let {
-                            it.body()?.meals
-                        } ?: emptyList()
+                                               it.body()?.meals
+                                    } ?: emptyList()
                     )
                 )
             }
