@@ -27,20 +27,22 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-apply plugin: "org.jlleitschuh.gradle.ktlint"
+subprojects {
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
 
-ktlint {
-    verbose = true
-    ignoreFailures = false
-    enableExperimentalRules = false
+    ktlint {
+        verbose = true
+        ignoreFailures = false
+        enableExperimentalRules = false
 
-    reporters {
-        reporter "plain"
-        reporter "checkstyle"
-    }
-    
-    filter {
-        exclude("**/generated/**")
-        include("**/kotlin/**")
+        reporters {
+            reporter "plain"
+            reporter "checkstyle"
+        }
+
+        filter {
+            exclude("**/generated/**")
+            include("**/kotlin/**")
+        }
     }
 }
