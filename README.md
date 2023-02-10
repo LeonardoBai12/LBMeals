@@ -7,7 +7,7 @@ Meal recipes Android application developed by Leonardo Bai, consuming [TheMealDB
 In the sample application you can:
 * Search meal recipes by category
 * Filter meal recipes by name
-* See pictures of the selected meal.
+* See pictures, ingredients and instructions of the selected meal.
 
 ### Technologies
 
