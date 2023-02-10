@@ -9,7 +9,7 @@ In the sample application you can:
 * Filter meal recipes by name
 * See pictures, ingredients and instructions of the selected meal.
 
-### Technologies
+## Technologies
 
 * [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 * [ViewModel](https://developer.android.com/reference/androidx/lifecycle/ViewModel)
