@@ -3,7 +3,7 @@ name: Run Unit Tests
 on: pull_request
 
 jobs:
-  build:
+  run_unit_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
