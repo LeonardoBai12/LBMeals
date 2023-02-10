@@ -25,6 +25,6 @@ In the sample application you can:
 
 ## Getting Started
 
-1. Download the LBMeals.apk file at the bottom of the repository
+1. Download the LBMeals.apk file at the artifacts of the "Build and Deploy APK" action
 2. Install it on your Android smartphone 
 3. Have fun with some new meal recipes =)
