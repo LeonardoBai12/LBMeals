@@ -21,6 +21,7 @@ plugins {
     id 'com.android.application' version '7.4.0' apply false
     id 'com.android.library' version '7.4.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.0' apply false
+    id 'org.jetbrains.dokka' version "1.7.20"
 }
 
 task clean(type: Delete) {
@@ -29,6 +30,7 @@ task clean(type: Delete) {
 
 subprojects {
     apply plugin: "org.jlleitschuh.gradle.ktlint"
+    apply plugin: "org.jetbrains.dokka"
 
     ktlint {
         verbose = true
@@ -42,6 +44,23 @@ subprojects {
         filter {
             exclude("**/generated/**")
             include("**/kotlin/**")
+        }
+    }
+
+    afterEvaluate {
+        if (tasks.findByName('dokkaHtml') == null) {
+            return
+        }
+
+        tasks.named("dokkaHtml") {
+
+            offlineMode.set(true)
+
+            dokkaSourceSets.configureEach {
+                includes.from("Packages.md")
+
+                skipEmptyPackages.set(true)
+            }
         }
     }
 }

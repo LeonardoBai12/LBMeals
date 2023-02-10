@@ -1,4 +1,4 @@
-package io.lb.lbmeals.core
+package io.lb.lbmeals.core.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
