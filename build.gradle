@@ -53,13 +53,17 @@ subprojects {
         }
 
         tasks.named("dokkaHtml") {
-
             offlineMode.set(true)
 
             dokkaSourceSets.configureEach {
                 includes.from("Packages.md")
 
                 skipEmptyPackages.set(true)
+
+                perPackageOption {
+                    matchingRegex.set(".*.(presentation|core|data|util|di|ui).*")
+                    suppress.set(true)
+                }
             }
         }
     }
