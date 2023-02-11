@@ -31,7 +31,7 @@ In the sample application you can:
 
 ## Documentation
 
-A brand new documentation documentation is published on every push on the main branch.\n
+A brand new documentation documentation is published on every push on the main branch.\
 You can access it by downloading the _lb-meals-documentation_ file from the [Documentation](https://github.com/LeonardoBai12/LBMeals/actions/workflows/documentation_workflow.yml) action artifacts.
 
 ## Functionalities Demonstration
