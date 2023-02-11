@@ -18,11 +18,8 @@ jobs:
       - name: Generate documentation
         run: ./gradlew clean app:dokkaHtml
 
-      - name: Rename APK file
-        run: mv app/build/dokka/html app/build/dokka/LBMealsDocumentation
-
-      - name: Upload APK
+      - name: Upload documentation
         uses: actions/upload-artifact@v3
         with:
           name: lb-meals-documentation
-          path: 'app/build/dokka/LBMealsDocumentation'
+          path: 'app/build/dokka/html'
