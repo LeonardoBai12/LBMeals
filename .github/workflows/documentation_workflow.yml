@@ -6,7 +6,7 @@ on:
       - feature/dokka
 
 jobs:
-  build-and-deploy:
+  documentation:
     runs-on: ubuntu-latest
 
     steps:
