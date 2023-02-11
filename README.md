@@ -25,7 +25,7 @@ In the sample application you can:
 
 ## Getting Started
 
-1. Download the LBMeals.apk file from the "Build and Deploy APK" action artifacts
+1. Download the LBMeals.apk file from the [Build and Deploy APK](https://github.com/LeonardoBai12/LBMeals/actions/workflows/build_and_deploy_workflow.yml) action artifacts
 2. Install it on your Android smartphone 
 3. Have fun with some new meal recipes =)
 
