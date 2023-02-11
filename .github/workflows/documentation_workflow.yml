@@ -3,7 +3,7 @@ name: Documentation
 on:
   push:
     branches:
-      - main
+      - feature/dokka
 
 jobs:
   build-and-deploy:
