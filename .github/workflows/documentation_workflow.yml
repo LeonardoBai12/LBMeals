@@ -1,0 +1,28 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Generate documentation
+        run: ./gradlew clean app:dokkaHtml
+
+      - name: Rename APK file
+        run: mv app/build/dokka/html app/build/dokka/LBMealsDocumentation
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: lb-meals-documentation
+          path: 'app/build/dokka/LBMealsDocumentation'

@@ -21,13 +21,18 @@ In the sample application you can:
 * [MockK](https://mockk.io) (Not yet implemented)
 * [Espresso](https://developer.android.com/training/testing/espresso) (Not yet implemented)
 * [Github Actions](https://docs.github.com/pt/actions/learn-github-actions)
-* [Dokka](https://github.com/Kotlin/dokka) (Not yet implemented)
+* [Dokka](https://github.com/Kotlin/dokka)
 
 ## Getting Started
 
-1. Download the LBMeals.apk file from the "Build and Deploy APK" action artifacts
+1. Download the LBMeals.apk file from the [Build and Deploy APK](https://github.com/LeonardoBai12/LBMeals/actions/workflows/build_and_deploy_workflow.yml) action artifacts
 2. Install it on your Android smartphone 
 3. Have fun with some new meal recipes =)
+
+## Documentation
+
+A brand new documentation documentation is published on every push on the main branch.\n
+You can access it by downloading the _lb-meals-documentation_ file from the [Documentation](https://github.com/LeonardoBai12/LBMeals/actions/workflows/documentation_workflow.yml) action artifacts.
 
 ## Functionalities Demonstration
 
