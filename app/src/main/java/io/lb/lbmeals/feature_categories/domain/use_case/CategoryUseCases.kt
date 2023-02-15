@@ -6,5 +6,6 @@ package io.lb.lbmeals.feature_categories.domain.use_case
  * @property getCategoriesUseCase Use case to request a list of meal categories.
  */
 data class CategoryUseCases(
-    val getCategoriesUseCase: GetCategoriesUseCase,
+       val getCategoriesUseCase: GetCategoriesUseCase,
 )
+
