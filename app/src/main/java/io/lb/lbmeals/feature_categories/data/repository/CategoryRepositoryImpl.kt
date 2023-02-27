@@ -1,6 +1,8 @@
 package io.lb.lbmeals.feature_categories.data.repository
 
 import io.lb.lbmeals.feature_categories.data.local.CategoryDao
+import io.lb.lbmeals.feature_categories.data.mapper.toCategory
+import io.lb.lbmeals.feature_categories.data.mapper.toCategoryEntity
 import io.lb.lbmeals.feature_categories.data.remote.CategoryService
 import io.lb.lbmeals.feature_categories.domain.model.Category
 import io.lb.lbmeals.feature_categories.domain.repository.CategoryRepository
@@ -19,7 +21,17 @@ class CategoryRepositoryImpl(
         return flow {
             emit(Resource.Loading(true))
 
-            val response = try {
+            val localCategories = dao.searchCategories()
+            emit(
+                Resource.Success(
+                    data = localCategories.map { it.toCategory() }
+                )
+            )
+
+            if (localCategories.isNotEmpty())
+                emit(Resource.Loading(false))
+
+            val remoteCategories = try {
                 service.getCategories()
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -31,14 +43,17 @@ class CategoryRepositoryImpl(
                 null
             }
 
-            response?.let { categories ->
+            remoteCategories?.body()?.categories?.takeIf {
+                it.isNotEmpty()
+            }?.let { categories ->
+                dao.clearCategories()
+                dao.insertCategory(
+                    categories.map { it.toCategoryEntity() }
+                )
+
                 emit(
                     Resource.Success(
-                        data = categories.takeIf {
-                            it.isSuccessful
-                        }?.let {
-                            it.body()?.categories
-                        } ?: emptyList()
+                        data = categories
                     )
                 )
             }

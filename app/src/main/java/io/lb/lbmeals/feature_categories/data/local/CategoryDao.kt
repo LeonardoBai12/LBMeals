@@ -21,5 +21,5 @@ interface CategoryDao {
             FROM categories
         """
     )
-    suspend fun getCategories(): List<CategoryEntity>
+    suspend fun searchCategories(): List<CategoryEntity>
 }
