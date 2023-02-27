@@ -59,11 +59,11 @@ data class Meal(
     @SerializedName("strMeal")
     val name: String,
     @SerializedName("strCategory")
-    val category: String,
+    val category: String?,
     @SerializedName("strArea")
     val area: String?,
     @SerializedName("strInstructions")
-    val instructions: String,
+    val instructions: String?,
     @SerializedName("strMealThumb")
     val thumbnail: String,
     @SerializedName("strYoutube")

@@ -27,8 +27,14 @@ object MealModule {
     }
 
     @Provides
-    fun providesMealRepository(service: MealService): MealRepository {
-        return MealRepositoryImpl(service)
+    fun providesMealRepository(
+        service: MealService,
+        dao: MealDao,
+    ): MealRepository {
+        return MealRepositoryImpl(
+            service,
+            dao,
+        )
     }
 
     @Provides

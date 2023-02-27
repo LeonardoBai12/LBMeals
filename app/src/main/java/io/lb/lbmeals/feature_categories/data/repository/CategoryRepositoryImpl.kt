@@ -21,15 +21,17 @@ class CategoryRepositoryImpl(
         return flow {
             emit(Resource.Loading(true))
 
-            val localCategories = dao.searchCategories()
-            emit(
-                Resource.Success(
-                    data = localCategories.map { it.toCategory() }
+            dao.searchCategories().takeIf {
+                it.isNotEmpty()
+            }?.let { categories ->
+                emit(
+                    Resource.Success(
+                        data = categories.map { it.toCategory() }
+                    )
                 )
-            )
 
-            if (localCategories.isNotEmpty())
                 emit(Resource.Loading(false))
+            }
 
             val remoteCategories = try {
                 service.getCategories()

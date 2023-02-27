@@ -19,7 +19,8 @@ interface MealDao {
         """
             SELECT * 
             FROM meals
+            WHERE LOWER(category) = LOWER(:category)
         """
     )
-    suspend fun searchMeals(): List<MealEntity>
+    suspend fun searchMeals(category: String): List<MealEntity>
 }
