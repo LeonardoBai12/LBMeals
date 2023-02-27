@@ -1,6 +1,7 @@
 package io.lb.lbmeals.feature_categories.data.repository
 
-import io.lb.lbmeals.feature_categories.data.data_source.CategoryService
+import io.lb.lbmeals.feature_categories.data.local.CategoryDao
+import io.lb.lbmeals.feature_categories.data.remote.CategoryService
 import io.lb.lbmeals.feature_categories.domain.model.Category
 import io.lb.lbmeals.feature_categories.domain.repository.CategoryRepository
 import io.lb.lbmeals.util.Resource
@@ -10,8 +11,10 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class CategoryRepositoryImpl(
-    private val service: CategoryService
+    private val service: CategoryService,
+    private val dao: CategoryDao,
 ) : CategoryRepository {
+
     override suspend fun getCategories(): Flow<Resource<List<Category>>> {
         return flow {
             emit(Resource.Loading(true))

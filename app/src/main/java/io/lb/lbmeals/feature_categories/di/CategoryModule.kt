@@ -4,7 +4,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import io.lb.lbmeals.feature_categories.data.data_source.CategoryService
+import io.lb.lbmeals.core.data.local.AppDatabase
+import io.lb.lbmeals.feature_categories.data.local.CategoryDao
+import io.lb.lbmeals.feature_categories.data.remote.CategoryService
 import io.lb.lbmeals.feature_categories.data.repository.CategoryRepositoryImpl
 import io.lb.lbmeals.feature_categories.domain.repository.CategoryRepository
 import io.lb.lbmeals.feature_categories.domain.use_case.CategoryUseCases
@@ -20,8 +22,19 @@ object CategoryModule {
     }
 
     @Provides
-    fun providesCategoryRepository(service: CategoryService): CategoryRepository {
-        return CategoryRepositoryImpl(service)
+    fun providesCategoryDao(appDatabase: AppDatabase): CategoryDao {
+        return appDatabase.categoryDao
+    }
+
+    @Provides
+    fun providesCategoryRepository(
+        service: CategoryService,
+        dao: CategoryDao,
+    ): CategoryRepository {
+        return CategoryRepositoryImpl(
+            service,
+            dao
+        )
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_categories.data.data_source
+package io.lb.lbmeals.feature_categories.data.remote
 
 import io.lb.lbmeals.feature_categories.domain.model.CategoryResponse
 import retrofit2.Response
