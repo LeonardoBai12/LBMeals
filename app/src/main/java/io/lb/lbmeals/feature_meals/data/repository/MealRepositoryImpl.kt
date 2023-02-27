@@ -1,6 +1,6 @@
 package io.lb.lbmeals.feature_meals.data.repository
 
-import io.lb.lbmeals.feature_meals.data.data_source.MealService
+import io.lb.lbmeals.feature_meals.data.remote.MealService
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 import io.lb.lbmeals.feature_meals.domain.repository.MealRepository
 import io.lb.lbmeals.util.Resource

@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meals.data.data_source
+package io.lb.lbmeals.feature_meals.data.remote
 
 import io.lb.lbmeals.feature_meals.domain.model.MealResponse
 import retrofit2.Response
