@@ -9,6 +9,6 @@ import io.lb.lbmeals.feature_categories.data.local.CategoryEntity
     version = 1,
     entities = [CategoryEntity::class]
 )
-abstract class AppDatabase: RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract val categoryDao: CategoryDao
 }

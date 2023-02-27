@@ -1,7 +1,6 @@
 package io.lb.lbmeals.util.components
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
