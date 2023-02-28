@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meals.presentation.components
+package io.lb.lbmeals.feature_meals.presentation.listing.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

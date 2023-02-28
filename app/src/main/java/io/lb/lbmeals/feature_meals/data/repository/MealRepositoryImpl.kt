@@ -20,9 +20,9 @@ class MealRepositoryImpl(
         return flow {
             emit(Resource.Loading(true))
 
-            dao.searchMeals(category).takeIf {
+            dao.searchMealsByCategory(category).takeIf {
                 it.isNotEmpty()
-            }?.let {meals ->
+            }?.let { meals ->
                 emit(
                     Resource.Success(
                         data = meals.map { it.toMeal() }
@@ -33,7 +33,7 @@ class MealRepositoryImpl(
             }
 
             val remoteMeals = try {
-                service.getMealByCategory(category)
+                service.getMealByCategory(category).body()?.meals
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
@@ -44,17 +44,49 @@ class MealRepositoryImpl(
                 null
             }
 
-            remoteMeals?.body()?.meals?.takeIf {
+            remoteMeals?.takeIf {
                 it.isNotEmpty()
             }?.let { meals ->
                 dao.clearMeals()
                 dao.insertMeal(
-                    meals.map { it.toMealEntity() }
+                    meals.map { it.toMealEntity(category) }
                 )
 
                 emit(
                     Resource.Success(
                         data = meals
+                    )
+                )
+            }
+
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun getMealDetailsById(id: String): Flow<Resource<Meal?>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            val response = try {
+                service.getMealDetailsById(id)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error("Couldn't load data"))
+                null
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error("Couldn't load data"))
+                null
+            }
+
+            response?.let { meal ->
+                emit(
+                    Resource.Success(
+                        data = meal.takeIf {
+                            it.isSuccessful
+                        }?.let {
+                            it.body()?.meals?.first()
+                        }
                     )
                 )
             }

@@ -22,5 +22,5 @@ interface MealDao {
             WHERE LOWER(category) = LOWER(:category)
         """
     )
-    suspend fun searchMeals(category: String): List<MealEntity>
+    suspend fun searchMealsByCategory(category: String): List<MealEntity>
 }

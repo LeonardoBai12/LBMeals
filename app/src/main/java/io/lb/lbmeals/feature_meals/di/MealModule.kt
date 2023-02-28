@@ -9,6 +9,7 @@ import io.lb.lbmeals.feature_meals.data.local.MealDao
 import io.lb.lbmeals.feature_meals.data.remote.MealService
 import io.lb.lbmeals.feature_meals.data.repository.MealRepositoryImpl
 import io.lb.lbmeals.feature_meals.domain.repository.MealRepository
+import io.lb.lbmeals.feature_meals.domain.use_case.GetMealDetailsByIdUseCase
 import io.lb.lbmeals.feature_meals.domain.use_case.GetMealsUseCase
 import io.lb.lbmeals.feature_meals.domain.use_case.MealUseCases
 import retrofit2.Retrofit
@@ -41,6 +42,7 @@ object MealModule {
     fun providesMealUseCases(repository: MealRepository): MealUseCases {
         return MealUseCases(
             getMealsUseCase = GetMealsUseCase(repository),
+            getMealDetailsByIdUseCase = GetMealDetailsByIdUseCase(repository)
         )
     }
 }

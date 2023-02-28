@@ -14,4 +14,11 @@ interface MealRepository {
      * @param category Category name.
      */
     suspend fun getMealsByCategory(category: String): Flow<Resource<List<Meal>>>
+
+    /**
+     * Request a single meal.
+     *
+     * @param id Meal API ID.
+     */
+    suspend fun getMealDetailsById(id: String): Flow<Resource<Meal?>>
 }

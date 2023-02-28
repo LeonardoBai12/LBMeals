@@ -39,6 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import io.lb.lbmeals.feature_meals.domain.model.Meal
+import io.lb.lbmeals.feature_meals.presentation.details.MealDetailsState
+import io.lb.lbmeals.feature_meals.presentation.details.MealDetailsViewModel
 import io.lb.lbmeals.util.components.DefaultAppBar
 import io.lb.lbmeals.util.components.DefaultErrorScreen
 import io.lb.lbmeals.util.components.shimmerAnimation

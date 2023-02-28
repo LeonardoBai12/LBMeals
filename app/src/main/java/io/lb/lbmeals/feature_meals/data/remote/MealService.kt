@@ -8,4 +8,7 @@ import retrofit2.http.Query
 interface MealService {
     @GET("api/json/v1/1/filter.php")
     suspend fun getMealByCategory(@Query("c") filter: String): Response<MealResponse>
+
+    @GET("api/json/v1/1/lookup.php")
+    suspend fun getMealDetailsById(@Query("i") filter: String): Response<MealResponse>
 }

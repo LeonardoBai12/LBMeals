@@ -34,7 +34,7 @@ class CategoryRepositoryImpl(
             }
 
             val remoteCategories = try {
-                service.getCategories()
+                service.getCategories().body()?.categories
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
@@ -45,7 +45,7 @@ class CategoryRepositoryImpl(
                 null
             }
 
-            remoteCategories?.body()?.categories?.takeIf {
+            remoteCategories?.takeIf {
                 it.isNotEmpty()
             }?.let { categories ->
                 dao.clearCategories()

@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.lb.lbmeals.feature_categories.presentation.CategoryScreen
 import io.lb.lbmeals.feature_meal_details.presentation.MealDetailsScreen
-import io.lb.lbmeals.feature_meals.presentation.MealsScreen
+import io.lb.lbmeals.feature_meals.presentation.listing.MealsScreen
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi

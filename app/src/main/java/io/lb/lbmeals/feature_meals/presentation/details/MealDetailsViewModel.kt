@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meal_details.presentation
+package io.lb.lbmeals.feature_meals.presentation.details
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.lb.lbmeals.feature_meal_details.domain.use_case.MealDetailsUseCases
+import io.lb.lbmeals.feature_meals.domain.repository.MealRepository
 import io.lb.lbmeals.util.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MealDetailsViewModel @Inject constructor(
-    private val useCases: MealDetailsUseCases,
+    private val useCases: MealRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val mealId: String
@@ -36,7 +36,7 @@ class MealDetailsViewModel @Inject constructor(
 
     fun getMealDetailsById() {
         viewModelScope.launch {
-            useCases.getMealDetailsByIdUseCase(mealId).collect { result ->
+            useCases.getMealDetailsById(mealId).collect { result ->
                 when (result) {
                     is Resource.Success -> {
                         result.data?.let {
