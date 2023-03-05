@@ -20,7 +20,9 @@ class MealRepositoryImpl(
         return flow {
             emit(Resource.Loading(true))
 
-            dao.searchMealsByCategory(category).takeIf {
+            val localMeals = dao.searchMealsByCategory(category)
+
+            localMeals.takeIf {
                 it.isNotEmpty()
             }?.let { meals ->
                 emit(
@@ -36,21 +38,20 @@ class MealRepositoryImpl(
                 service.getMealByCategory(category).body()?.meals
             } catch (e: IOException) {
                 e.printStackTrace()
-                emit(Resource.Error("Couldn't load data"))
                 null
             } catch (e: HttpException) {
                 e.printStackTrace()
-                emit(Resource.Error("Couldn't load data"))
                 null
             }
 
             remoteMeals?.takeIf {
                 it.isNotEmpty()
             }?.let { meals ->
-                dao.clearMeals()
-                dao.insertMeal(
-                    meals.map { it.toMealEntity(category) }
-                )
+                meals.filter { meal ->
+                    !localMeals.any { meal.id == it.id }
+                }.forEach { meal ->
+                    dao.insertSingleMeal(meal.toMealEntity())
+                }
 
                 emit(
                     Resource.Success(
@@ -58,6 +59,9 @@ class MealRepositoryImpl(
                     )
                 )
             }
+
+            if (localMeals.isEmpty() && remoteMeals.isNullOrEmpty())
+                emit(Resource.Error("Couldn't load data"))
 
             emit(Resource.Loading(false))
         }
@@ -67,29 +71,45 @@ class MealRepositoryImpl(
         return flow {
             emit(Resource.Loading(true))
 
-            val response = try {
-                service.getMealDetailsById(id)
+            val localMeal = dao.searchMealById(id)
+
+            localMeal?.takeIf {
+                it.ingredient1 != null
+            }?.let { mealEntity ->
+                emit(
+                    Resource.Success(
+                        mealEntity.toMeal()
+                    )
+                )
+
+                emit(Resource.Loading(false))
+            }
+
+            val remoteMeal = try {
+                service.getMealDetailsById(id).body()?.meals?.first()
             } catch (e: IOException) {
                 e.printStackTrace()
-                emit(Resource.Error("Couldn't load data"))
                 null
             } catch (e: HttpException) {
                 e.printStackTrace()
-                emit(Resource.Error("Couldn't load data"))
                 null
             }
 
-            response?.let { meal ->
+            remoteMeal?.let { meal ->
+                localMeal?.let {
+                    dao.updateMeal(meal.toMealEntity(localId = localMeal.localId))
+                }
+
                 emit(
                     Resource.Success(
-                        data = meal.takeIf {
-                            it.isSuccessful
-                        }?.let {
-                            it.body()?.meals?.first()
-                        }
+                        data = meal
                     )
                 )
             }
+
+            localMeal ?: remoteMeal ?: emit(
+                Resource.Error("Couldn't load data")
+            )
 
             emit(Resource.Loading(false))
         }

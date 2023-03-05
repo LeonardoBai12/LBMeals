@@ -3,8 +3,12 @@ package io.lb.lbmeals.feature_meals.data.mapper
 import io.lb.lbmeals.feature_meals.data.local.MealEntity
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 
-fun Meal.toMealEntity(category: String?): MealEntity {
+fun Meal.toMealEntity(
+    localId: Int? = null,
+    category: String? = this.category,
+): MealEntity {
     return MealEntity(
+        localId = localId,
         id = id,
         name = name,
         category = category ?: this.category,

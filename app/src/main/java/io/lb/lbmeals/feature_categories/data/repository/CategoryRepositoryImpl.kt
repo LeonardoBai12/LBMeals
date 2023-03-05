@@ -21,7 +21,9 @@ class CategoryRepositoryImpl(
         return flow {
             emit(Resource.Loading(true))
 
-            dao.searchCategories().takeIf {
+            val localCategories = dao.searchCategories()
+
+            localCategories.takeIf {
                 it.isNotEmpty()
             }?.let { categories ->
                 emit(
@@ -37,11 +39,9 @@ class CategoryRepositoryImpl(
                 service.getCategories().body()?.categories
             } catch (e: IOException) {
                 e.printStackTrace()
-                emit(Resource.Error("Couldn't load data"))
                 null
             } catch (e: HttpException) {
                 e.printStackTrace()
-                emit(Resource.Error("Couldn't load data"))
                 null
             }
 
@@ -59,6 +59,9 @@ class CategoryRepositoryImpl(
                     )
                 )
             }
+
+            if (localCategories.isEmpty() && remoteCategories.isNullOrEmpty())
+                emit(Resource.Error("Couldn't load data"))
 
             emit(Resource.Loading(false))
         }

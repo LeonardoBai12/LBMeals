@@ -9,8 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,13 +46,28 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
             mutableStateOf(true)
         }
 
+        val couldNotLoad = remember {
+            mutableStateOf(false)
+        }
+
         if (loading.value) {
             Box(
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .height(200.dp)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
+            }
+        } else if (couldNotLoad.value) {
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxSize()
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Couldn't load picture")
             }
         }
 
@@ -55,12 +75,17 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
         ) {
             Image(
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .height(200.dp)
                     .fillMaxWidth(),
                 painter = rememberAsyncImagePainter(
                     model = meal.thumbnail,
                     onSuccess = {
                         loading.value = false
+                    },
+                    onError = {
+                        loading.value = false
+                        couldNotLoad.value = true
                     }
                 ),
                 contentScale = ContentScale.Crop,
@@ -90,18 +115,21 @@ fun MealShimmerCard() {
             modifier = Modifier.fillMaxSize(),
         ) {
             Spacer(
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .height(200.dp)
                     .fillMaxWidth()
                     .shimmerAnimation(),
             )
 
             Spacer(
-                modifier = Modifier.height(24.dp)
+                modifier = Modifier
+                    .height(24.dp)
                     .fillMaxWidth(0.7F)
                     .padding(
                         horizontal = 16.dp,
                         vertical = 12.dp,
-                    ).shimmerAnimation(),
+                    )
+                    .shimmerAnimation(),
             )
         }
     }

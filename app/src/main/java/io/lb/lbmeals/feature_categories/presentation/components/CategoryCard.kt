@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +42,10 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
         mutableStateOf(true)
     }
 
+    val couldNotLoad = remember {
+        mutableStateOf(false)
+    }
+
     if (loading.value) {
         Box(
             modifier = Modifier
@@ -46,6 +55,16 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
+        }
+    } else if (couldNotLoad.value) {
+        Box(
+            modifier = Modifier
+                .height(150.dp)
+                .fillMaxSize()
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Couldn't load picture")
         }
     }
 
@@ -63,6 +82,7 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
+
         Image(
             modifier = Modifier.fillMaxSize(0.8F),
             painter = rememberAsyncImagePainter(
@@ -70,6 +90,10 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
                 onSuccess = {
                     loading.value = false
                 },
+                onError = {
+                    loading.value = false
+                    couldNotLoad.value = true
+                }
             ),
             contentDescription = "categoryThumb",
         )
