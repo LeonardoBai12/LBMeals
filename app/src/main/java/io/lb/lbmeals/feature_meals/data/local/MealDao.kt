@@ -9,17 +9,9 @@ import androidx.room.Update
 @Dao
 interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMeals(
-        mealEntities: List<MealEntity>
-    )
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSingleMeal(
         mealEntities: MealEntity
     )
-
-    @Query("DELETE FROM meals WHERE LOWER(category) = LOWER(:category)")
-    suspend fun clearMeals(category: String)
 
     @Update
     suspend fun updateMeal(mealEntity: MealEntity)
