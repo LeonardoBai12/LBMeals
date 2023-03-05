@@ -10,7 +10,7 @@ import androidx.room.Update
 interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSingleMeal(
-        mealEntities: MealEntity
+        mealEntity: MealEntity
     )
 
     @Update
