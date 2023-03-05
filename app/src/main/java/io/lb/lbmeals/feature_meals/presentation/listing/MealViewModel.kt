@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meals.presentation
+package io.lb.lbmeals.feature_meals.presentation.listing
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName
  * @property description Category description.
  */
 data class Category(
-    @SerializedName("idMeal")
+    @SerializedName("idCategory")
     val id: String,
     @SerializedName("strCategory")
     val name: String,

@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meals.presentation.components
+package io.lb.lbmeals.feature_meals.presentation.listing.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -41,13 +41,28 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
             mutableStateOf(true)
         }
 
+        val couldNotLoad = remember {
+            mutableStateOf(false)
+        }
+
         if (loading.value) {
             Box(
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .height(200.dp)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
+            }
+        } else if (couldNotLoad.value) {
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxSize()
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Couldn't load picture")
             }
         }
 
@@ -55,12 +70,17 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
         ) {
             Image(
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .height(200.dp)
                     .fillMaxWidth(),
                 painter = rememberAsyncImagePainter(
                     model = meal.thumbnail,
                     onSuccess = {
                         loading.value = false
+                    },
+                    onError = {
+                        loading.value = false
+                        couldNotLoad.value = true
                     }
                 ),
                 contentScale = ContentScale.Crop,
@@ -90,18 +110,21 @@ fun MealShimmerCard() {
             modifier = Modifier.fillMaxSize(),
         ) {
             Spacer(
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .height(200.dp)
                     .fillMaxWidth()
                     .shimmerAnimation(),
             )
 
             Spacer(
-                modifier = Modifier.height(24.dp)
+                modifier = Modifier
+                    .height(24.dp)
                     .fillMaxWidth(0.7F)
                     .padding(
                         horizontal = 16.dp,
                         vertical = 12.dp,
-                    ).shimmerAnimation(),
+                    )
+                    .shimmerAnimation(),
             )
         }
     }

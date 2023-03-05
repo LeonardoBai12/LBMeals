@@ -37,6 +37,10 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
         mutableStateOf(true)
     }
 
+    val couldNotLoad = remember {
+        mutableStateOf(false)
+    }
+
     if (loading.value) {
         Box(
             modifier = Modifier
@@ -46,6 +50,16 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
+        }
+    } else if (couldNotLoad.value) {
+        Box(
+            modifier = Modifier
+                .height(150.dp)
+                .fillMaxSize()
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Couldn't load picture")
         }
     }
 
@@ -70,6 +84,10 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
                 onSuccess = {
                     loading.value = false
                 },
+                onError = {
+                    loading.value = false
+                    couldNotLoad.value = true
+                }
             ),
             contentDescription = "categoryThumb",
         )

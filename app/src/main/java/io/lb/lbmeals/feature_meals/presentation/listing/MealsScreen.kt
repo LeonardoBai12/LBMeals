@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meals.presentation
+package io.lb.lbmeals.feature_meals.presentation.listing
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import io.lb.lbmeals.core.navigation.MainScreens
-import io.lb.lbmeals.feature_meals.presentation.components.MealCard
-import io.lb.lbmeals.feature_meals.presentation.components.MealShimmerCard
+import io.lb.lbmeals.feature_meals.presentation.listing.components.MealCard
+import io.lb.lbmeals.feature_meals.presentation.listing.components.MealShimmerCard
 import io.lb.lbmeals.util.components.DefaultAppBar
 import io.lb.lbmeals.util.components.DefaultErrorScreen
 import io.lb.lbmeals.util.components.DefaultSearchBar

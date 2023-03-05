@@ -1,4 +1,4 @@
-package io.lb.lbmeals.feature_meal_details.presentation
+package io.lb.lbmeals.feature_meals.presentation.details
 
 import io.lb.lbmeals.feature_meals.domain.model.Meal
 
