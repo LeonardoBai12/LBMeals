@@ -50,7 +50,7 @@ class MealRepositoryImpl(
                 meals.filter { meal ->
                     !localMeals.any { meal.id == it.id }
                 }.forEach { meal ->
-                    dao.insertSingleMeal(meal.toMealEntity())
+                    dao.insertSingleMeal(meal.toMealEntity(category = category))
                 }
 
                 emit(
