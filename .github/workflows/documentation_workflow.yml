@@ -15,6 +15,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Decode google-services.json
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+        run: echo $GOOGLE_SERVICES > app/google-services.json
+
       - name: Generate documentation
         run: ./gradlew clean app:dokkaHtml
 
