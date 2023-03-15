@@ -53,6 +53,11 @@ class MealRepositoryImpl(
                     dao.insertSingleMeal(meal.toMealEntity(category = category))
                 }
 
+                localMeals.forEach {
+                    if (it.category == category && it.toMeal() !in meals)
+                        dao.deleteMeal(it)
+                }
+
                 emit(
                     Resource.Success(
                         data = meals
@@ -74,7 +79,7 @@ class MealRepositoryImpl(
             val localMeal = dao.searchMealById(id)
 
             localMeal?.takeIf {
-                it.ingredient1 != null
+                it.instructions.isNullOrEmpty().not()
             }?.let { mealEntity ->
                 emit(
                     Resource.Success(
