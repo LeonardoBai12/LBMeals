@@ -32,7 +32,6 @@ task clean(type: Delete) {
 }
 
 subprojects {
-    apply from: "$project.rootDir/jacoco.gradle"
     apply from: "$project.rootDir/ktlint.gradle"
     apply from: "$project.rootDir/dokka.gradle"
 }
