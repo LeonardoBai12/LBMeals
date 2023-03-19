@@ -1,6 +1,9 @@
 name: Coverage Report
 
-on: pull_request
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   coverage:
@@ -27,12 +30,10 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2.14.3
         with:
           api-level: 29
-          script: ./gradlew createDebugCoverageReport
+          script: ./gradlew createDebugUnitTestCoverageReport
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v3
         with:
           name: lb-meals-coverage-report
           path: 'app/build/reports/coverage/androidTest/debug/connected'
-
-
