@@ -30,7 +30,7 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2.14.3
         with:
           api-level: 29
-          script: ./gradlew createDebugUnitTestCoverageReport
+          script: ./gradlew clean createDebugUnitTestCoverageReport
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v3

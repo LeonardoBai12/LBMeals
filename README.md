@@ -22,6 +22,7 @@ In the sample application you can:
 * [Espresso](https://developer.android.com/training/testing/espresso) (Not yet implemented)
 * [Github Actions](https://docs.github.com/pt/actions/learn-github-actions)
 * [Dokka](https://github.com/Kotlin/dokka)
+* [JaCoCo](https://www.jacoco.org)
 
 ## Getting Started
 
@@ -31,8 +32,13 @@ In the sample application you can:
 
 ## Documentation
 
-A brand new documentation documentation is published on every push on the main branch.\
+A brand new documentation is published on every push on the main branch.\
 You can access it by downloading the _lb-meals-documentation_ file from the [Documentation](https://github.com/LeonardoBai12/LBMeals/actions/workflows/documentation_workflow.yml) action artifacts.
+
+## Coverage Report
+
+An unit test coverage report is published on every push on the main branch.\
+You can access it by downloading the _lb-meals-coverage-report_ file from the [Coverage Report](https://github.com/LeonardoBai12/LBMeals/actions/workflows/coverage_report_worflow.yml) action artifacts.
 
 ## Functionalities Demonstration
 
