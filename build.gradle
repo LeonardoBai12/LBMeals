@@ -16,6 +16,7 @@ buildscript {
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
         classpath 'com.google.gms:google-services:4.3.15'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.4'
+        classpath "org.jacoco:org.jacoco.core:0.8.8"
     }
 }
 
@@ -31,42 +32,6 @@ task clean(type: Delete) {
 }
 
 subprojects {
-    apply plugin: "org.jlleitschuh.gradle.ktlint"
-    apply plugin: "org.jetbrains.dokka"
-
-    ktlint {
-        verbose = true
-        ignoreFailures = false
-
-        reporters {
-            reporter "plain"
-            reporter "checkstyle"
-        }
-
-        filter {
-            exclude("**/generated/**")
-            include("**/kotlin/**")
-        }
-    }
-
-    afterEvaluate {
-        if (tasks.findByName('dokkaHtml') == null) {
-            return
-        }
-
-        tasks.named("dokkaHtml") {
-            offlineMode.set(true)
-
-            dokkaSourceSets.configureEach {
-                includes.from("Packages.md")
-
-                skipEmptyPackages.set(true)
-
-                perPackageOption {
-                    matchingRegex.set(".*.(presentation|core|data|util|di|ui).*")
-                    suppress.set(true)
-                }
-            }
-        }
-    }
+    apply from: "$project.rootDir/ktlint.gradle"
+    apply from: "$project.rootDir/dokka.gradle"
 }

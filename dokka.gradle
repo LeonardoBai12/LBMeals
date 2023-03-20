@@ -1,0 +1,22 @@
+apply plugin: "org.jetbrains.dokka"
+
+afterEvaluate {
+    if (tasks.findByName('dokkaHtml') == null) {
+        return
+    }
+
+    tasks.named("dokkaHtml") {
+        offlineMode.set(true)
+
+        dokkaSourceSets.configureEach {
+            includes.from("Packages.md")
+
+            skipEmptyPackages.set(true)
+
+            perPackageOption {
+                matchingRegex.set(".*.(presentation|core|data|util|di|ui).*")
+                suppress.set(true)
+            }
+        }
+    }
+}
