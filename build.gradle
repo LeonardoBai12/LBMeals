@@ -1,8 +1,9 @@
 buildscript {
     ext {
-        compose_version = '1.4.0-beta02'
+        compose_version = '1.5.0-alpha03'
         hilt_version = '2.44'
         ktlintVersion = '11.1.0'
+        kotlin_version = '1.8.10'
     }
 
     repositories {
@@ -15,14 +16,15 @@ buildscript {
         classpath "com.google.code.gson:gson:2.9.0"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.4'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.5'
         classpath "org.jacoco:org.jacoco.core:0.8.8"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 plugins {
-    id 'com.android.application' version '7.4.0' apply false
-    id 'com.android.library' version '7.4.0' apply false
+    id 'com.android.application' version '8.0.0' apply false
+    id 'com.android.library' version '8.0.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
     id 'org.jetbrains.dokka' version "1.8.10"
 }
